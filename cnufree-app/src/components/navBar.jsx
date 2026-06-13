@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Menu } from 'lucide-react';
 import { useState } from "react";
+import { motion } from "framer-motion";
 import logo from '../assets/logo.png';
 
 
@@ -12,16 +13,21 @@ function NavBar() {
     return (
     
     <>
-        <nav className=" w-full border-b border-[#e2e2e2]  sm:px-10 lg:px-32">
+        <motion.nav
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className=" w-full border-b border-[#e2e2e2]  sm:px-10 lg:px-32"
+        >
 
         <div className="flex items-center justify-between">  
 
           <div className="flex items-center"> 
             <a href="/"> <img  className="block ml-[10px]" width="50px" src={logo} alt="CNU-logo"/>    </a> 
             <div className="hidden md:block">
-              <a href="/ " className="text-[#7C7B7B] border-b-2 border-transparent hover:border-b-[#FCE034] p-[19px] transition-all duration-300 ease-in-out " > Schedule </a>
-              <a href="/ " className="text-[#7C7B7B] border-b-2 border-transparent hover:border-b-[#FCE034] p-[19px] transition-all duration-300 ease-in-out " > Friends  </a>
-              <button> <a href="/ " className="text-[#7C7B7B] border-b-2 border-transparent hover:border-b-[#FCE034] p-[19px] transition-all duration-300 ease-in-out  " > Calendar </a> </button>
+              <a href="/ " className="text-[#7C7B7B] border-b-2 border-transparent hover:border-b-[#FCE034] p-[19px] transition-all duration-300 ease-in-out " > Feature </a>
+              <a href="/ " className="text-[#7C7B7B] border-b-2 border-transparent hover:border-b-[#FCE034] p-[19px] transition-all duration-300 ease-in-out " > How it works  </a>
+              <button> <a href="/ " className="text-[#7C7B7B] border-b-2 border-transparent hover:border-b-[#FCE034] p-[19px] transition-all duration-300 ease-in-out  " > Creators </a> </button>
             </div>
           </div>
 
@@ -35,13 +41,13 @@ function NavBar() {
         </div>
 
           <div className={`${isOpen ? "block" : "hidden"} md:hidden bg-[#243668]`}>
-            <a href="/ " className="block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out p-[5px]" > Schedule </a>
-            <a href="/ " className="block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out  p-[5px]" > Friends </a>
-            <a href="/ " className="block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out  p-[5px] " > Calendar </a>
+            <a href="/ " className="block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out p-[5px]" > Feature </a>
+            <a href="/ " className="block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out  p-[5px]" > How it works </a>
+            <a href="/ " className="block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out  p-[5px] " > Creators </a>
             <a href="/ " className="block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out  p-[5px]"> Sign In </a>
             <a href="/ " className="block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out  p-[5px]  "> Create Schedule </a>
           </div>
-      </nav> 
+      </motion.nav> 
 
     </>
     );

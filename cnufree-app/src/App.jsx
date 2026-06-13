@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from './pages/LandingPage.jsx';
-// import SignInPage from './pages/SignInPage.jsx';
+import SignInPage from './pages/SignInPage.jsx';
 // import VerificationPage from './pages/VerificationPage.jsx';
 // import Onboarding from "./pages/Onboarding.jsx";
 // import HomePage from './pages/HomePage.jsx';
@@ -15,11 +15,11 @@ const router = createBrowserRouter([
       {
         path: '/',
         element:  <LandingPage />
-      }
-      // {
-      //   path: '/SignInPage',
-      //   element:  <SignInPage />
-      // },  
+      },
+      {
+        path: '/SignInPage',
+        element:  <SignInPage />
+      }  
       // {
       //   path: '/Onboarding',
       //   element: <Onboarding/> 

@@ -2,6 +2,15 @@
 
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-y: scroll;
+}
+
+
 @layer base {
   body {
     @apply min-h-screen m-0;
