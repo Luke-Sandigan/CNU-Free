@@ -1,17 +1,46 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from './assets/vite.svg'
-// import heroImg from './assets/hero.png'
-import './App.css'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import LandingPage from './pages/LandingPage.jsx';
+// import SignInPage from './pages/SignInPage.jsx';
+// import VerificationPage from './pages/VerificationPage.jsx';
+// import Onboarding from "./pages/Onboarding.jsx";
+// import HomePage from './pages/HomePage.jsx';
+import AppLayout from './layouts/app-layout.jsx';
+import './App.css';
+
+  
+const router = createBrowserRouter([ 
+  { 
+    element: <AppLayout/>,
+    children:[
+      {
+        path: '/',
+        element:  <LandingPage />
+      }
+      // {
+      //   path: '/SignInPage',
+      //   element:  <SignInPage />
+      // },  
+      // {
+      //   path: '/Onboarding',
+      //   element: <Onboarding/> 
+      // },
+      // {
+      //   path: '/Home',
+      //   element: <HomePage />
+      // }
+
+    ]
+
+  }
+])
 
 function App() {
 
 
   return (
-    <>
-      Please Help Us Mama
-    </>
-  )
-}
+    <RouterProvider router={router} />
+    
+  );
+} 
 
 export default App
