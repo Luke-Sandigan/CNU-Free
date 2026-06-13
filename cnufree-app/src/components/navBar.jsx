@@ -34,7 +34,7 @@ function NavBar() {
 
           <div className="items-center hidden sm:flex">
              <button onClick={() => navigate("/SignInPage")}> <a className=" border-l-1 border-b-2 border-transparent hover:border-b-[#FCE034] p-[18px] font-bold transition-all duration-300 ease-in-out"> Sign In </a> </button>
-              <div className=" h-[20px] border-l border-[#e2e2e2]"></div>
+              {/* <div className=" h-[20px] border-l border-[#e2e2e2]"></div> */}
             <button  className=" pl-[20px] border-b-2 border-transparent bg-[#FCE034]  hover:bg-[#D6EAC3] p-[18px] font-bold mr-[10px] transition-all duration-300 ease-in-out "> Create a Job Post </button>
           </div>
         <button className="block sm:hidden pr-5" onClick={()=> setIsOpen(!isOpen)}>  <Menu /> </button>
