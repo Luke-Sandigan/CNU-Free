@@ -46,8 +46,8 @@ function NavBar() {
         <button className="block sm:hidden pr-5" onClick={()=> setIsOpen(!isOpen)}>  <Menu /> </button>
         </div>
 
-          <div className={`${isOpen ? "block" : "hidden"} md:hidden bg-[#243668]`}>
-            <a href="/ " className="bg-[#111827] block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out p-[5px]" > Feature </a>
+          <div className={`${isOpen ? "block" : "hidden"} md:hidden bg-[#111827] `}>
+            <a href="/ " className="block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out p-[5px]" > Feature </a>
             <a href="/ " className="bg-[#111827] block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out  p-[5px]" > How it works </a>
             <a href="/ " className="bg-[#111827] block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out  p-[5px] " > Creators </a>
             <a href="/ " className="bg-[#111827] block text-[#ffffff] border-b-2 border-transparent hover:bg-[#D6EAC3] transition-all duration-300 ease-in-out  p-[5px]"> Sign In </a>

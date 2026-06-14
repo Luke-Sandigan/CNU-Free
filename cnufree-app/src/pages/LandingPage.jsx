@@ -10,10 +10,10 @@ function LandingPage() {
     const navigate = useNavigate();
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
             {/* <TopBar/> */}
             <NavBar/>
-            <section className=" overflow-hidden-[calc(100vh-61.6px)] flex flex-col items-center justify-center">
+            <section className=" overflow-hidden-[calc(100vh-61.6px)] flex flex-col items-center justify-center m-10 md:m-0">
 
              <motion.div
                     className="flex flex-col flex-auto items-center justify-center text-center max-w-2xl"
@@ -24,7 +24,7 @@ function LandingPage() {
                         delay: 0.3
                     }}
                 >
-                    <h1 className="mt-10 text-[#111827] font-extrabold text-[30px] sm:text-[37px]  leading-tight"> A place to sync your <br/> <span className="bg-gradient-to-l from-gray-400 to-[#111827] bg-clip-text text-transparent"> weekly schdule </span> </h1>
+                    <h1 className="mt-10 text-[#111827] font-extrabold text-[30px] sm:text-[37px]  leading-tight"> A place to sync your <br/> <span className="bg-gradient-to-l from-gray-400 to-[#111827] bg-clip-text text-transparent"> weekly schedule </span> </h1>
                 
                 </motion.div>
    
