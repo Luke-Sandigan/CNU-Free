@@ -4,7 +4,7 @@ import CardWrapper from '../components/cardWrapper';
 import GoogleIcon from '../components/GoogleIcon'
 import AppleIcon from '../components/AppleIcon'
 import BackButton from '../components/BackComponent';
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 // import { supabase } from '../utils/supabase'
 
 function SignInPage() {
@@ -43,7 +43,7 @@ function SignInPage() {
 
     <CardWrapper>
         <BackButton to="/"/>
-        <h1 className="font-bold text-[21px] sm:text-[23px] pl-2 bg-[#FCE034]"> Ready to Organize Your Student Life? </h1>
+        <h1 className="font-bold text-[21px] sm:text-[23px] text-white pl-2 bg-[#111827]"> Ready to Organize Your Student Life? </h1>
         <p className=" text-md sm:text-[18px] mt-2 mb-1" > Create an account or sign in </p>
         <p className=" text-[12px] sm:text-[12px] text-gray-500 mb-6 leading-relaxed"> By clicking any of the “Continue” options below, you agree to HireStreet’s <a> Terms of Service  </a>
         and acknowledge our <a> Privacy Policy  </a>and <a> Cookie Policy </a>. You may receive updates and career-related notifications
@@ -77,12 +77,12 @@ function SignInPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder=""
-            className="w-full border text-sm border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FCE034] focus:border-[#FCE034] mb-2 transition"
+            className="w-full border text-sm border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] mb-2 transition"
         />
 
         <button
             
-            className="w-full bg-[#FCE034] hover:scale-105 hover:scale-105 hover:shadow-[0_0_30px_rgba(252,224,52,0.9)] border-2 font-semibold py-3 rounded-lg transition-all duration-300 ease-in-out mb-6 "
+            className="w-full bg-[#111827] text-white hover:shadow-[0_0_30px_rgba(168,85,247,0.8)] hover:scale-105 border-2 font-semibold py-3 rounded-lg transition-all duration-300 ease-in-out mb-6 "
         >
             Continue
         </button>
