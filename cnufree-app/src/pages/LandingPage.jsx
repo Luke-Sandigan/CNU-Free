@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ChevronLast } from 'lucide-react';
+// import { ChevronLast } from 'lucide-react';
 import { motion } from "framer-motion";
 import NavBar from '../components/navBar.jsx';
 // import logo from '../assets/logo.png';
