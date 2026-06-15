@@ -1,17 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { Menu } from 'lucide-react';
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search } from 'lucide-react';
 import logo from '../assets/logo2.png';
+// import SideBar from './Sidebar.jsx'
 
 
 
-function HomeNavBar() {
+function HomeNavBar({isOpen, setIsOpen}) {
 
-    const [isOpen, setIsOpen] = useState(false);
+
     const navigate = useNavigate();
-
+    
     return (
     
     <div className="w-full ">
@@ -19,7 +19,7 @@ function HomeNavBar() {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
-          className=" px-3 w-full border-b  border-[#e2e2e2]"
+          className=" px-3 w-full border-b  border-[#e2e2e2] z-10"
         >
         <div className=""> </div>
         
@@ -28,9 +28,10 @@ function HomeNavBar() {
 
           <div className="flex items-center gap-2 "> 
              <button className="block" onClick={()=> setIsOpen(!isOpen)}>  <Menu /> </button>
+             {/* <SideBar/> */}
             <a href="/"> <img  className="block ml-[10px]" width="35px" src={logo} alt="CNU-logo"/>    </a> 
-            <div >
-              <p className="font-extrabold text-[#111827]"> CNU <span > Free </span></p>
+            <div className="hidden sm:block ">
+              <p className="font-extrabold text-[#111827] "> CNU <span > Free </span></p>
             </div>
           </div>
 
@@ -51,7 +52,7 @@ function HomeNavBar() {
 
           <div className="items-center flex gap-1">
              <button 
-             className=" hover:bg-[#111827] hover:text-white border border-slate-200 rounded-[5px] px-4 py-2 text-[15px] font-bold transition-all duration-300 ease-in-out"
+             className=" hover:bg-[#111827] hover:text-white border border-slate-200 hidden sm:block  rounded-[5px] px-4 py-2 text-[15px] font-bold transition-all duration-300 ease-in-out"
              onClick={() => navigate("/LandingPage")}>  Log Out  </button>
               {/* <div className=" h-[20px] border-l border-[#e2e2e2]"></div> */}
             <div  
