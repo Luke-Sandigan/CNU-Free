@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage.jsx';
 import AppLayout from './layouts/app-layout.jsx';
 import './App.css';
 
+
   
 const router = createBrowserRouter([ 
   { 
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
       // },
       {
         path: '/Home',
-        element: <HomePage />
+        element: <HomePage/>
       }
     ]
 

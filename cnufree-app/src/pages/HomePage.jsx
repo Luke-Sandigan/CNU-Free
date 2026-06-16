@@ -1,6 +1,8 @@
-import HomeNavBar from "../components/HomeNavBar"
-import SideBar from '../components/Sidebar.jsx'
 import { useState } from "react";
+import SideBar from '../components/SideBar.jsx'
+import HomeNavBar from "../components/HomeNavBar"
+
+
 
 
 function HomePage() {
@@ -8,16 +10,15 @@ function HomePage() {
      const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="flex flex-col w-full">
-       <SideBar
+      <SideBar
         open={isOpen}
         close={()=> setIsOpen(false)}
        />
       <HomeNavBar
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-      />
-     
-
+      /> 
+  
     </div>
   )
 }

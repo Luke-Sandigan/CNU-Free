@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Menu } from 'lucide-react';
 import { useState } from "react";
 import { motion } from "framer-motion";
-import logo from '../assets/logo.png';
+import logo from '../assets/logo2.png';
 
 
 function NavBar() {
@@ -22,8 +22,8 @@ function NavBar() {
         <div className=""> </div>
         <div className=" flex items-center justify-between h-[61px]">  
 
-          <div className="flex items-center "> 
-            <a href="/"> <img  className="block ml-[10px]" width="50px" src={logo} alt="CNU-logo"/>    </a> 
+          <div className="flex items-center gap-2"> 
+            <a href="/"> <img  className="block ml-[10px]" width="35px" src={logo} alt="CNU-logo"/>    </a> 
             <div >
               <p className="font-extrabold text-[#111827]"> CNU <span > Free </span></p>
             </div>

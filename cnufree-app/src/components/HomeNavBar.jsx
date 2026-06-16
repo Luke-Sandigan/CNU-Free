@@ -27,7 +27,7 @@ function HomeNavBar({isOpen, setIsOpen}) {
          
 
           <div className="flex items-center gap-2 "> 
-             <button className="block" onClick={()=> setIsOpen(!isOpen)}>  <Menu /> </button>
+            <button className="block" onClick={()=> setIsOpen(!isOpen)}>  <Menu /> </button>
              {/* <SideBar/> */}
             <a href="/"> <img  className="block ml-[10px]" width="35px" src={logo} alt="CNU-logo"/>    </a> 
             <div className="hidden sm:block ">
@@ -36,24 +36,25 @@ function HomeNavBar({isOpen, setIsOpen}) {
           </div>
 
             <div className="flex items-center justify-center w-1/2 md:w-100 mr-11 md:mr-0">
-                <Search
-                    size={18}
-                    className=" translate-x-8  text-gray-400"
-                />
-                    <input 
-                    className=" p-2 px-4 pl-10 w-full border text-gray-900 text-[15px] p- border-slate-200 rounded-full"
-                    type="text"
-                    placeholder="Search folders, tasks, or connected peers..."
-                    
-                    />
-                
+
+              <Search
+                  size={18}
+                  className=" translate-x-8  text-gray-400"
+              />
+
+              <input 
+              className=" p-2 px-4 pl-10 w-full border text-gray-900 text-[15px] p- border-slate-200 rounded-full"
+              type="text"
+              placeholder="Search folders, tasks, or connected peers..."
+              />
+  
             </div>
 
 
           <div className="items-center flex gap-1">
              <button 
              className=" hover:bg-[#111827] hover:text-white border border-slate-200 hidden sm:block  rounded-[5px] px-4 py-2 text-[15px] font-bold transition-all duration-300 ease-in-out"
-             onClick={() => navigate("/LandingPage")}>  Log Out  </button>
+             onClick={() => navigate("/")}>  Log Out  </button>
               {/* <div className=" h-[20px] border-l border-[#e2e2e2]"></div> */}
             <div  
             onClick={()=> alert("Clicked!")}

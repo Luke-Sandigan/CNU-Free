@@ -1,5 +1,5 @@
 
-import logo from '../assets/logo.png';
+import logo from '../assets/logo2.png';
 import { motion } from "framer-motion";
 
 function CardWrapper({ children }) {
@@ -11,7 +11,7 @@ function CardWrapper({ children }) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
           >
-            <img  className="block w-[50px] sm:w-[50px] md:w-[100px]"  src={logo} alt="CNU-Free"/> 
+            <img  className="block w-[50px] sm:w-[50px] md:w-[50px]"  src={logo} alt="CNU-Free"/> 
         </motion.div>
 
       <motion.div
