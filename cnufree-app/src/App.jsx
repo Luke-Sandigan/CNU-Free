@@ -26,7 +26,27 @@ const router = createBrowserRouter([
       // },
       {
         path: '/Home',
-        element: <HomePage />
+        element: <HomePage defaultTab="planner" />
+      },
+      {
+        path: '/HomePage',
+        element: <HomePage defaultTab="planner" />
+      },
+      {
+        path: '/Planner',
+        element: <HomePage defaultTab="planner" />
+      },
+      {
+        path: '/SharedTracker',
+        element: <HomePage defaultTab="tracker" />
+      },
+      {
+        path: '/Chat',
+        element: <HomePage defaultTab="chats" />
+      },
+      {
+        path: '/Connections',
+        element: <HomePage defaultTab="connections" />
       }
     ]
 
