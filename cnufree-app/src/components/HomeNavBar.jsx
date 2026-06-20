@@ -14,12 +14,12 @@ function HomeNavBar({isOpen, setIsOpen}) {
     
     return (
     
-    <div className="w-full ">
+    <div className="w-full fixed bg-white">
         <motion.nav
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
-          className=" px-3 w-full border-b  border-[#e2e2e2] z-10"
+          className=" px-3 w-full border-b  border-[#e2e2e2] z-50"
         >
         <div className=""> </div>
         
@@ -62,7 +62,7 @@ function HomeNavBar({isOpen, setIsOpen}) {
             > L </div>
           </div>
         </div>
-
+ 
       </motion.nav> 
 
     </div>

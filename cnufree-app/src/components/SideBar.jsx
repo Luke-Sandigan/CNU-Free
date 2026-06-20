@@ -23,8 +23,8 @@ function SideBar ({open, close}) {
     <aside
       className={`
         py-4 w-64 min-h-screen bg-white border-r border-gray-200
-        fixed top-0 left-0 z-40
-        transition-transform duration-300
+        fixed top-0 left-0  z-40 
+        transition-transform duration-300 
        flex flex-col     ${open ? "translate-x-0" : "-translate-x-full"}`}
     >
       <div className="flex align-center justify-center gap-18 mb-5">
@@ -35,7 +35,7 @@ function SideBar ({open, close}) {
 
           <div className="">
             <button 
-              className="pt-2"
+              className="pt-2 hover:bg-slate-300 pb-2 hover:rounded-full transition-all duration-300 ease-in-out"
               onClick={close}
             >
               <ArrowLeftToLine size={20} />
@@ -48,7 +48,7 @@ function SideBar ({open, close}) {
       <nav className="flex flex-col flex-1 text-[15px]  text-slate-500">
         
             <div className="p-2 pl-8 flex gap-3 items-center hover:text-black hover:bg-slate-100 transition-all duration-300 ease-in-out"
-            onClick={()=> navigate("/")}
+            onClick={()=> navigate("/Home")}
             >
               <ClipboardList size={23} />
               <a href="#" className=" hover:bg-gray-100">
@@ -57,7 +57,7 @@ function SideBar ({open, close}) {
             </div>
 
             <div className="p-2 pl-8 flex gap-3 items-center hover:text-black hover:bg-slate-100 transition-all duration-300 ease-in-out" 
-            onClick={()=> navigate("/")}
+            onClick={()=> navigate("/SharedTracker")}
             >
               <Boxes size={23} />
               <a href="#" className=" hover:bg-gray-100">
