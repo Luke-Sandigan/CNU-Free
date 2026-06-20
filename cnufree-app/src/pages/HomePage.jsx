@@ -89,7 +89,6 @@ function HomePage() {
           <WeeklyScheduleCard
             schedule={schedule}
             showActions={showActions}
-
             toggleActions={() =>
               setShowActions(!showActions)
             }
@@ -99,7 +98,7 @@ function HomePage() {
             onAddClick={() =>
               setIsModalOpen(true)
             }
-            
+
             onEditClick={(item) => {
               setEditingSchedule(item);
               setIsEditOpen(true);

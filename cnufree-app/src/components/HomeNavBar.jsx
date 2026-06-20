@@ -2,19 +2,27 @@ import { useNavigate } from "react-router-dom";
 import { Menu } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Search } from 'lucide-react';
+import { useState } from "react";
 import logo from '../assets/logo2.png';
+import ProfileModal from "./ProfileModal";
 // import SideBar from './Sidebar.jsx'
 
 
 
 function HomeNavBar({isOpen, setIsOpen}) {
 
-
     const navigate = useNavigate();
+    const [isProfileOpen, setProfileOpen] = useState(false);
     
     return (
     
     <div className="w-full fixed bg-white">
+
+        <ProfileModal
+          open={isProfileOpen}
+          close={()=> setProfileOpen(false)}
+        />
+
         <motion.nav
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -57,12 +65,13 @@ function HomeNavBar({isOpen, setIsOpen}) {
              onClick={() => navigate("/")}>  Log Out  </button>
               {/* <div className=" h-[20px] border-l border-[#e2e2e2]"></div> */}
             <div  
-            onClick={()=> alert("Clicked!")}
+            onClick={()=> setProfileOpen(true)}
+
             className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)] hover:scale-105 py-2 px-4  text-[15px] bg-[#111827] font-bold rounded-[5px] text-white px-4  transition-all duration-300 ease-in-out "
             > L </div>
           </div>
         </div>
- 
+
       </motion.nav> 
 
     </div>
