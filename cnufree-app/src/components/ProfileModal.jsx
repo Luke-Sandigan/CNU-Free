@@ -63,7 +63,7 @@ function ProfileModal({open, close, }) {
                 <div className="p-8  flex flex-col border rounded-[15px] mb-8">
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-sm border px-1 font-extrabold"> ADNU </span>
-                        <span className="text-sm text-slate-400"> Student Card </span>
+                        <span className="text-[12px] font-bold text-slate-400"> STUDENT ID CARD </span>
                     </div>
                     
                     <div className="flex gap-5 w-full mb-8 ">
