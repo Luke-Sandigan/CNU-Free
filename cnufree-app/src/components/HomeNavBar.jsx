@@ -5,6 +5,7 @@ import { Search } from 'lucide-react';
 import { useState } from "react";
 import logo from '../assets/logo2.png';
 import ProfileModal from "./ProfileModal";
+import SideBar from "./SideBar";
 // import SideBar from './Sidebar.jsx'
 
 
@@ -17,6 +18,11 @@ function HomeNavBar({isOpen, setIsOpen}) {
     return (
     
     <div className="w-full fixed bg-white">
+
+      <SideBar
+        open={isOpen}
+        close={() => setIsOpen(false)}
+      />
 
         <ProfileModal
           open={isProfileOpen}

@@ -44,13 +44,10 @@ function HomePage() {
   };
 
   return (
-    <div className="flex flex-col items-center ">
+    <div className="flex flex-col items-center overflow-hidden">
 
     
-      <SideBar
-        open={isOpen}
-        close={() => setIsOpen(false)}
-      />
+
 
       <HomeNavBar
         isOpen={isOpen}
