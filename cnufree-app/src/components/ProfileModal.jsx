@@ -1,13 +1,25 @@
+
+import { useState } from "react";
 import logo from '../assets/logo2.png';
 import { ArrowLeftToLine } from 'lucide-react';
 import { SquarePen } from 'lucide-react';
+import EditProfile from './EditProfile';
 
 function ProfileModal({open, close, }) {
+  
+    const [editProfileOpen, setEditProfileClose] = useState(false);
+    
     if (!open) return null; 
-
   return (
 
     <>
+
+    <EditProfile
+        openEdit={editProfileOpen}
+        closeEdit={()=>setEditProfileClose(false)}
+
+    />
+
     <div
         className="fixed inset-0 bg-black/50 z-30 flex items-center justify-center"
         onClick={close}
@@ -96,9 +108,10 @@ function ProfileModal({open, close, }) {
                 <div className="border-t border-slate-100 mb-2 "> </div>
                 <div>
                     <button
+                     onClick={()=> setEditProfileClose(true)}
                      className=" w-full p-2 flex items-center justify-center hover:bg-[#223151] transition-all duration-300 ease-in-out
                      gap-2 border rounded-[10px] bg-[#111827] font-extrabold text-white"
-                    > <SquarePen className="w-5"/> Edit Profile Data </button>
+                    > <SquarePen className="w-5"/> Edit Profile Data  </button>
                 </div>
 
             </div>
