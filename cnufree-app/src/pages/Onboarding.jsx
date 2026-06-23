@@ -303,7 +303,7 @@ function Onboarding() {
                                         font-bold rounded-[8px] text-sm transition-all duration-300 ease-in-out 
                                         text-amber-50 bg-[#111827] hover:bg-[#5A98E6] "
                                         onClick={() => {
-                                            
+                    
                                               const profileData = {
                                                                 school,
                                                                 IDnum,
@@ -314,11 +314,10 @@ function Onboarding() {
                                                                 username,
                                                             };
 
-                                                            localStorage.setItem(
-                                                                "studentProfile",
+                                                            localStorage.setItem("studentProfile",                                                         
                                                                 JSON.stringify(profileData)
                                                             );
-                                            
+                                                            
                                             navigate("/Home")
                                         }}
                                     >

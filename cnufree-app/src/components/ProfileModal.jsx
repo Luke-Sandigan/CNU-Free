@@ -18,6 +18,8 @@ function ProfileModal({open, close, }) {
 
     }, []);
 
+
+
     if (!open) return null; 
 
   return (
