@@ -26,7 +26,8 @@ function ProfileModal({open, close, }) {
     <EditProfile
         openEdit={editProfileOpen}
         closeEdit={()=>setEditProfileClose(false)}
-
+        profile={profile}
+        onUpdateProfile={(updatedProfile) => setProfile(updatedProfile)}
     />
 
     <div
@@ -38,7 +39,7 @@ function ProfileModal({open, close, }) {
 
         <aside
             className={`
-                py-9 px-2
+                py-9 px-4
                 w-90 h-full
                 min-h-screen
                 bg-white
@@ -95,7 +96,7 @@ function ProfileModal({open, close, }) {
                         <div className="flex flex-col gap-2">
                             <div className="flex flex-col">
                                 <span className="font-extrabold"> {profile?.lastname} </span>
-                                <span className="font-extrabold text-[13px] text-slate-400"> {profile?.name}  </span>
+                                <span className="font-extrabold text-[13px] text-slate-400"> {profile?.firstname}  </span>
                             </div>
 
                             <div>

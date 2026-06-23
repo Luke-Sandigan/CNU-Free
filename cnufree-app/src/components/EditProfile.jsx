@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function EditProfile({openEdit, closeEdit, update}) {
+function EditProfile({openEdit, closeEdit, profile, onUpdateProfile}) {
 
 
     if (!openEdit) return null;
