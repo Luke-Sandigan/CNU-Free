@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftToLine } from 'lucide-react';
 import { ClipboardList } from 'lucide-react';
@@ -8,8 +9,19 @@ import logo from '../assets/logo2.png';
 
 function SideBar ({open, close}) {
 
+    const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
 
+        useEffect(() => {
+
+        const savedProfile =
+            localStorage.getItem("studentProfile");
+
+        if (savedProfile) {setProfile(JSON.parse(savedProfile));}
+
+    }, []);
+
+    if (!open) return null; 
 
     return (
 <>
@@ -81,12 +93,12 @@ function SideBar ({open, close}) {
 
       <div className="mt-auto flex p-2 gap-2 flex items-center justify-center h-20 border border-x-0 border-y-slate-200">
         <div className="w-9 h-9 bg-[#111827] rounded-full flex items-center justify-center shrink-0">
-          <p className="text-white font-extrabold text-sm">F</p>
+          <p className="text-white font-extrabold text-sm"> {profile?.firstname.charAt(0).toUpperCase()} </p>
         </div>
 
           <div className="flex flex-col ">
-              <h3 className="font-extrabold"> Francis John Paul Daluro</h3>
-              <p className="text-[13px]"> BSIT - 2</p>
+              <h3 className="font-extrabold"> {profile?.firstname} {profile.lastname} </h3>
+              <p className="text-[13px]"> {profile?.program} - {profile?.year} </p>
           </div>
       </div>
 </aside>

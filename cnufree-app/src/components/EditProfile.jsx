@@ -1,11 +1,7 @@
 import { useState } from "react";
 
 function EditProfile({openEdit, closeEdit, update}) {
-    const [School, setSchool] = useState("")
-    const [Surname, setSurname] = useState("")
-    const [Firstname, setFirstname] = useState("")
-    const [Idnumber, setIdnumber] = useState("")
-    const [year, setYear] = useState("")
+
 
     if (!openEdit) return null;
 

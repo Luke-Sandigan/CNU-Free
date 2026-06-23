@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Menu } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Search } from 'lucide-react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from '../assets/logo2.png';
 import ProfileModal from "./ProfileModal";
 import SideBar from "./SideBar";
@@ -14,7 +14,19 @@ function HomeNavBar({isOpen, setIsOpen}) {
 
     const navigate = useNavigate();
     const [isProfileOpen, setProfileOpen] = useState(false);
+    const [profile, setProfile] = useState(null);
     
+    useEffect(() => {
+
+        const savedProfile = localStorage.getItem("studentProfile");
+
+        if (savedProfile) {setProfile(JSON.parse(savedProfile));}
+
+    }, []);
+
+      if (!open) return null; 
+
+
     return (
     
     <div className="w-full fixed bg-white">
@@ -74,7 +86,7 @@ function HomeNavBar({isOpen, setIsOpen}) {
             onClick={()=> setProfileOpen(true)}
 
             className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)] hover:scale-105 py-2 px-4  text-[15px] bg-[#111827] font-bold rounded-[5px] text-white px-4  transition-all duration-300 ease-in-out "
-            > L </div>
+            > {profile?.firstname.charAt(0).toUpperCase()} </div>
           </div>
         </div>
 

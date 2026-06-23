@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from '../assets/logo2.png';
 import { ArrowLeftToLine } from 'lucide-react';
 import { SquarePen } from 'lucide-react';
@@ -8,10 +8,19 @@ import EditProfile from './EditProfile';
 function ProfileModal({open, close, }) {
   
     const [editProfileOpen, setEditProfileClose] = useState(false);
-    
-    if (!open) return null; 
-  return (
+    const [profile, setProfile] = useState(null);
 
+    useEffect(() => {
+
+        const savedProfile = localStorage.getItem("studentProfile");
+
+        if (savedProfile) {setProfile(JSON.parse(savedProfile));}
+
+    }, []);
+
+    if (!open) return null; 
+
+  return (
     <>
 
     <EditProfile
@@ -74,26 +83,26 @@ function ProfileModal({open, close, }) {
 
                 <div className="p-8  flex flex-col border rounded-[15px] mb-8">
                     <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm border px-1 font-extrabold"> ADNU </span>
+                        <span className="text-sm border px-1 font-extrabold"> {profile?.school} </span>
                         <span className="text-[12px] font-bold text-slate-400"> STUDENT ID CARD </span>
                     </div>
                     
                     <div className="flex gap-5 w-full mb-8 ">
                         <div className="flex items-center justify-center w-17 h-17 border rounded bg-slate-300">
-                            <span className="font-extrabold text-slate-600 text-[30px]"> J</span>
+                            <span className="font-extrabold text-slate-600 text-[30px]"> {profile?.firstname?.charAt(0).toUpperCase()} </span>
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <div className="flex flex-col">
-                                <span className="font-extrabold"> Daluro</span>
-                                <span className="font-extrabold text-[13px] text-slate-400"> Francis John Paul  </span>
+                                <span className="font-extrabold"> {profile?.lastname} </span>
+                                <span className="font-extrabold text-[13px] text-slate-400"> {profile?.name}  </span>
                             </div>
 
                             <div>
                                 <div className="font-extrabold text-[12px] 
-                                text-slate-400 flex items-center gap-2 "> ID No: <span className="text-black"> 202400069 </span>   </div>
+                                text-slate-400 flex items-center gap-2 "> ID No: <span className="text-black"> {profile?.IDnum} </span>   </div>
                                 <div className="font-extrabold text-[12px] 
-                                text-slate-400 flex items-center  gap-2  "> Year:  <span className="text-black" > 2 - BSIT</span>  </div>
+                                text-slate-400 flex items-center  gap-2  "> Year:  <span className="text-black" > {profile?.year} - {profile?.program} </span>  </div>
                             </div>
                         </div>
                     </div>
@@ -101,6 +110,17 @@ function ProfileModal({open, close, }) {
                     <div className="border-t border-slate-300 mb-5"> </div>
                     <div className="w-full h-4 bg-[#111827]"> </div>
                 </div> 
+                
+                <div className="font-extrabold text-[13px] text-slate-400 mb-2">
+                    USERNAME
+                </div>
+                <div className="border-t border-slate-100 mb-2 "> </div>
+
+                <div className="w-full p-2 border flex items-center justify-center rounded-xl mb-4
+                border-[1DBD88] bg-[#E1F6EF] text-[#1DBD88] font-extrabold">
+                    @{profile?.username}
+                </div>
+
 
                 <div className="font-extrabold text-[13px] text-slate-400 mb-2">
                     PROFILE OPTIONS

@@ -81,9 +81,10 @@ function SignInPage() {
         />
 
         <button
-            onClick={()=> navigate('/Home')}
+            onClick={()=> navigate('/Onboarding')}
             className="w-full bg-[#111827] text-white hover:shadow-[0_0_30px_rgba(168,85,247,0.8)] hover:scale-105 border-2 font-semibold py-3 rounded-lg transition-all duration-300 ease-in-out mb-6 "
         >
+
             Continue
         </button>
 
