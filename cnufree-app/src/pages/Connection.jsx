@@ -35,9 +35,9 @@ function Connection() {
           </div>
         </div>
 
-        <div className="flex flex-wrap w-full gap-4 sm:gap-12 items-center justify-center ">
+        <div className="flex flex-wrap w-full gap-4 sm:gap-5 items-center justify-center ">
 
-          <div className="  border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5">
+          <div className=" flex-[1_1_auto] border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5">
             <div  
               className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]  flex
               hover:scale-105 py-3  text-lg bg-slate-400 font-extrabold rounded-[5px]  px-4  mb-2
@@ -63,7 +63,7 @@ function Connection() {
             </button>
           </div>
 
-          <div className="  border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5">
+          <div className=" flex-[1_1_auto] border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5">
             <div  
               className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]  flex
               hover:scale-105 py-3  text-lg bg-slate-400 font-extrabold rounded-[5px]  px-4  mb-2
@@ -89,7 +89,7 @@ function Connection() {
             </button>
           </div>
 
-          <div className="  border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5">
+          <div className="  flex-[1_1_auto]  border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5">
             <div  
               className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]  flex
               hover:scale-105 py-3  text-lg bg-slate-400 font-extrabold rounded-[5px]  px-4  mb-2
