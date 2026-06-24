@@ -79,7 +79,7 @@ function SideBar ({open, close}) {
             </div>
 
             <div className="p-2 pl-8 flex gap-3 items-center hover:text-black hover:bg-slate-100 transition-all duration-300 ease-in-out" 
-            onClick={()=> navigate("/")}
+            onClick={()=> navigate("/Connection")}
             >
               <UserCheck size={23} />
               <a href="#" className=" hover:bg-gray-100">
