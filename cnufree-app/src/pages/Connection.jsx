@@ -2,6 +2,7 @@ import { useState } from "react";
 import { UserRoundPlus } from 'lucide-react';
 import SideBar from '../components/SideBar.jsx'
 import HomeNavBar from "../components/HomeNavBar"
+import SearchProfileModal from "../components/searchModal";
 
 function Connection() {
 
@@ -9,6 +10,7 @@ function Connection() {
     const [isOpen, setIsOpen] = useState(false);
     const [isActive, setIsActive] = useState("friends");
     const [showMenu, setShowMenu] = useState(false);
+    const [showSearchModal, setShowSearchModal] = useState(false);
 
   return (
     <div className="flex flex-col items-center">
@@ -49,8 +51,8 @@ function Connection() {
                 "
               >
                 {isActive === "friends" && "Friends"}
-                {isActive === "friendReq" && "Requests"}
-                {isActive === "PendingReq" && "Pending"}
+                {isActive === "friendReq" && "Friend Requests"}
+                {isActive === "PendingReq" && "Pending Requests"}
               </button>
 
               <div
@@ -65,7 +67,7 @@ function Connection() {
                   border-slate-300
                   rounded-lg
                   shadow-lg
-                  z-[999]
+                  
                   overflow-hidden
                   transition-all
                   duration-200
@@ -111,9 +113,10 @@ function Connection() {
 
 
             <button
-             className="shrink-0 border px-3 py-2 font-extrabold rounded-lg text-white bg-[#111824] flex items-center"
+              onClick={() => setShowSearchModal(true)}
+              className="shrink-0 border px-3 py-2 font-extrabold rounded-lg text-white bg-[#111824] flex items-center"
             >
-            <UserRoundPlus size={20} /> 
+              <UserRoundPlus size={20} />
             </button>
           </div>
 
@@ -223,6 +226,11 @@ function Connection() {
 
       </main>
   
+        <SearchProfileModal
+          open={showSearchModal}
+          close={() => setShowSearchModal(false)}
+        />
+
     </div>
   )
 }

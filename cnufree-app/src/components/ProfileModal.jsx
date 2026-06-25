@@ -33,7 +33,7 @@ function ProfileModal({open, close, }) {
     />
 
     <div
-        className="fixed inset-0 bg-black/50 z-30 flex items-center justify-center"
+        className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center"
         onClick={close}
      >
 
@@ -50,7 +50,7 @@ function ProfileModal({open, close, }) {
                 fixed
                 top-0
                 right-0
-                z-40
+                z-[150]
                 transition-transform
                 duration-300
                 flex
