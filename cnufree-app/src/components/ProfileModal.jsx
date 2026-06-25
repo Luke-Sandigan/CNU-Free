@@ -33,7 +33,7 @@ function ProfileModal({open, close, }) {
     />
 
     <div
-        className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center"
+        className="fixed inset-0 bg-black/50 z-[40] flex items-center justify-center"
         onClick={close}
      >
 
@@ -50,7 +50,7 @@ function ProfileModal({open, close, }) {
                 fixed
                 top-0
                 right-0
-                z-[150]
+                z-50
                 transition-transform
                 duration-300
                 flex
@@ -66,7 +66,7 @@ function ProfileModal({open, close, }) {
 
  
  
-        <div className="w-full h-full flex flex-col items-center justify-between">
+        <div className="w-full h-full flex flex-col items-center justify-between ">
 
             <div className="w-full">
                 <div className="flex items-center justify-between  mb-5">
