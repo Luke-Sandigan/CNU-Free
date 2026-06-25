@@ -80,7 +80,8 @@ function HomeNavBar({isOpen, setIsOpen}) {
           <div className="items-center flex gap-1">
              <button 
              className=" hover:bg-[#111827] hover:text-white border border-slate-200 hidden sm:block  rounded-[5px] px-4 py-2 text-[15px] font-bold transition-all duration-300 ease-in-out"
-             onClick={() => navigate("/")}>  Log Out  </button>
+             onClick={() => navigate("/")}>  Log Out 
+             </button>
               {/* <div className=" h-[20px] border-l border-[#e2e2e2]"></div> */}
             <div  
             onClick={()=> setProfileOpen(true)}
