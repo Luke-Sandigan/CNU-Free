@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import logo from '../assets/logo2.png';
 import ProfileModal from "./ProfileModal";
 import SideBar from "./SideBar";
+import { supabase } from "../utils/supabase";
 // import SideBar from './Sidebar.jsx'
 
 
@@ -16,15 +17,79 @@ function HomeNavBar({isOpen, setIsOpen}) {
     const [isProfileOpen, setProfileOpen] = useState(false);
     const [profile, setProfile] = useState(null);
     
+    //  useEffect(() => {
+
+    //     const savedProfile = localStorage.getItem("studentProfile");
+
+    //     if (savedProfile) {setProfile(JSON.parse(savedProfile));}
+
+    // }, []);
+
     useEffect(() => {
 
-        const savedProfile = localStorage.getItem("studentProfile");
+      let channel;
 
-        if (savedProfile) {setProfile(JSON.parse(savedProfile));}
+        async function loadProfile() {
+
+            const {
+                data: { user }
+            } = await supabase.auth.getUser();
+
+            if (!user) return;
+
+            const { data } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", user.id)
+                .single();
+
+            setProfile(data);
+
+            channel = supabase
+                .channel(`profile-${user.id}`)
+                .on(
+                    "postgres_changes",
+                    {
+                        event: "UPDATE",
+                        schema: "public",
+                        table: "profiles",
+                        filter: `id=eq.${user.id}`
+                    },
+                    (payload) => {
+                        console.log("Realtime fired!");
+                        setProfile(payload.new);
+                    }
+                )
+                .subscribe((status) => {
+                    console.log("Channel status:", status);
+                });
+
+            return channel;
+        }
+
+        
+
+        loadProfile();
+
+        return () => {
+            if (channel) {
+                supabase.removeChannel(channel);
+            }
+        };
 
     }, []);
 
-   
+    async function handleLogout() {
+
+          const { error } = await supabase.auth.signOut();
+
+          if (error) {
+              console.error(error);
+              return;
+          }
+
+          navigate("/");
+    }
 
 
     return (
@@ -82,14 +147,14 @@ function HomeNavBar({isOpen, setIsOpen}) {
           <div className="items-center flex gap-1">
              <button 
              className=" hover:bg-[#111827] hover:text-white border border-slate-200 hidden sm:block  rounded-[5px] px-4 py-2 text-[15px] font-bold transition-all duration-300 ease-in-out"
-             onClick={() => navigate("/")}>  Log Out 
+             onClick={handleLogout} >  Log Out 
              </button>
               {/* <div className=" h-[20px] border-l border-[#e2e2e2]"></div> */}
             <div  
             onClick={()=> setProfileOpen(true)}
 
-            className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)] hover:scale-105 py-2 px-4  text-[15px] bg-[#111827] font-bold rounded-[5px] text-white px-4  transition-all duration-300 ease-in-out "
-            > {profile?.firstname.charAt(0).toUpperCase()} </div>
+            className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)] hover:scale-105 py-2 px-4  text-[15px] bg-[#111827] font-extrabold rounded-[5px] text-white px-4  transition-all duration-300 ease-in-out "
+            > {profile?.firstname.charAt(0).toUpperCase() || "?"} </div>
           </div>
         </div>
 

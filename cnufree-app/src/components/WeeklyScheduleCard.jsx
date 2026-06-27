@@ -1,5 +1,7 @@
 import { Plus } from "lucide-react";
 import { SquarePen } from 'lucide-react';
+import { CalendarDays, } from 'lucide-react';
+import { CalendarOff } from 'lucide-react';
 
 const DAYS = [
   "Sun",
@@ -38,8 +40,8 @@ function WeeklyScheduleCard({ schedule, onAddClick, onEditClick, onDeleteClick, 
   return (
     <section className="w-full rounded-xl border border-slate-200 bg-white p-6 shadow-md">
       <div className="mb-5 flex items-center justify-between">
-        <h2 className="font-extrabold">
-          📅 My Weekly Schedule
+        <h2 className="font-extrabold flex gap-2">
+          <CalendarDays/> My Weekly Schedule
         </h2>
 
       <div className="flex gap-2">
@@ -51,7 +53,8 @@ function WeeklyScheduleCard({ schedule, onAddClick, onEditClick, onDeleteClick, 
             px-3
             py-1
             text-sm
-            font-bold
+            font-extrabold duration-300 ease-linear
+            hover:bg-[#111824] transition-all hover:text-white
           "
         >
           {showActions
@@ -61,7 +64,8 @@ function WeeklyScheduleCard({ schedule, onAddClick, onEditClick, onDeleteClick, 
 
         <button
           onClick={onAddClick}
-          className="flex items-center gap-1 rounded-[5px] border bg-[#111827] px-1 sm:px-3 py-1 text-sm font-bold text-white transition-all duration-300 ease-in-out hover:bg-[#3b4a6a]"
+          className="flex items-center gap-1 rounded-[5px] border bg-[#111827] hover:text-[#111824] hover:font-extrabold hover:border-none
+          px-1 sm:px-3 py-1 text-sm font-bold text-white transition-all duration-300 ease-linear hover:bg-gray-300"
         >
           <Plus size={16} />
           <span className="hidden sm:block">
@@ -72,7 +76,7 @@ function WeeklyScheduleCard({ schedule, onAddClick, onEditClick, onDeleteClick, 
       </div>
       {schedule.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
-          <span className="text-6xl">📅</span>
+          <span className="text-6xl"> <CalendarOff size={100}/> </span>
 
           <h3 className="mt-4 text-xl font-bold text-slate-700">
             No schedules yet
@@ -103,9 +107,9 @@ function WeeklyScheduleCard({ schedule, onAddClick, onEditClick, onDeleteClick, 
                 {DAYS.map((day) => (
                   <td
                     key={day}
-                    className="align-top p-2"
+                    className="align-top p-2 "
                   >
-                    <div className="space-y-2">
+                    <div className="space-y-2  ">
                       {schedule
                         .filter(
                           (item) => item.day === day
@@ -118,7 +122,7 @@ function WeeklyScheduleCard({ schedule, onAddClick, onEditClick, onDeleteClick, 
                         .map((item) => (
                           <div
                             key={item.id}
-                            className={`rounded-lg border-l-4 p-3 ${COLOR_STYLES[item.color]}`}
+                            className={`rounded-lg border-l-4 p-2 ${COLOR_STYLES[item.color]}`}
                           >
                       
                               <h3 className="font-bold">
@@ -128,11 +132,11 @@ function WeeklyScheduleCard({ schedule, onAddClick, onEditClick, onDeleteClick, 
                     
                           
 
-                            <p className="text-xs">
+                            <p className=" text-[9px] sm:text-[10px] font-bold ">
                                {formatTime(item.startTime)} - {formatTime(item.endTime)}
                             </p>
 
-                            <p className="text-xs mb-2">
+                            <p className="text-[9px] sm:text-[10px] mb-2">
                               Room: {item.room}
                             </p>
 
@@ -144,7 +148,7 @@ function WeeklyScheduleCard({ schedule, onAddClick, onEditClick, onDeleteClick, 
                                   }}
                                   className="
                                     rounded
-                                    bg-blue-500
+                                    bg-[#111824]
                                     px-2
                                     py-1
                                     text-xs

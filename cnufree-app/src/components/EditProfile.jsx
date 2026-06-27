@@ -1,7 +1,9 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import OnboardingWrap from "./OnboardingWrap";
+import { updateProfile } from "../services/profileService";
+import LoadingModal from "./LoadingModal";
 
-function EditProfile({openEdit, closeEdit, profile, onUpdateProfile}) {
+function EditProfile({openEdit, closeEdit, profile, refreshProfile }) {
 
     const [school, setSchool] = useState("");
     const [firstname, setFirstname] = useState("");
@@ -10,44 +12,89 @@ function EditProfile({openEdit, closeEdit, profile, onUpdateProfile}) {
     const [year, setYear] = useState("");
     const [program, setProgram] = useState("");
     const [username, setUsername] = useState("");
+    const [loading, setLoading] = useState(false);
 
 
+    // useEffect(() => {
+    //   if (profile) {
+    //     setSchool(profile.school || "");
+    //     setFirstname(profile.firstname || "");
+    //     setLastname(profile.lastname || "");
+    //     setIDnum(profile.IDnum || "");
+    //     setYear(profile.year || "");
+    //     setProgram(profile.program || "");
+    //     setUsername(profile.username || "");
+    //   }
+    // }, [profile, openEdit]);
+
+    // const handleSave = () => {
+    //   const updatedProfile = {
+    //     ...profile,
+
+    //         school,
+    //         firstname,
+    //         lastname,
+    //         IDnum,
+    //         year,
+    //         program,
+    //         username,
+    //   };
+
+    //   localStorage.setItem(
+    //     "studentProfile",
+    //     JSON.stringify(updatedProfile)
+    //   );
+
+    //   onUpdateProfile(updatedProfile);
+
+    //   closeEdit();
+      
+    // }
 
     useEffect(() => {
-      if (profile) {
-        setSchool(profile.school || "");
+
+        if (!profile) return;
+
+        setSchool(profile.school_name || "");
         setFirstname(profile.firstname || "");
         setLastname(profile.lastname || "");
-        setIDnum(profile.IDnum || "");
+        setIDnum(profile.id_num || "");
         setYear(profile.year || "");
         setProgram(profile.program || "");
         setUsername(profile.username || "");
-      }
+
     }, [profile, openEdit]);
 
-    const handleSave = () => {
-      const updatedProfile = {
-        ...profile,
+    async function handleSubmit() {
 
-            school,
-            firstname,
-            lastname,
-            IDnum,
-            year,
-            program,
-            username,
-      };
+        setLoading(true);
 
-      localStorage.setItem(
-        "studentProfile",
-        JSON.stringify(updatedProfile)
-      );
+        try {
+            await updateProfile({
+                firstname,
+                lastname,
+                username,
+                school_name: school,
+                id_num: IDnum,
+                year,
+                program
+            });
 
-      onUpdateProfile(updatedProfile);
+            await refreshProfile();
 
-      closeEdit();
-      
+            closeEdit();
+
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+
+        } finally {
+            setLoading(false);
+        }
+
+
     }
+        
 
     if (!openEdit) return null;
 
@@ -187,12 +234,13 @@ function EditProfile({openEdit, closeEdit, profile, onUpdateProfile}) {
                 className="ml-auto flex gap-2 py-[10px] px-[15px] 
                 font-bold rounded-[8px] text-sm transition-all duration-300 ease-in-out 
                 text-amber-50 bg-[#111827] hover:bg-[#5A98E6] "
-            onClick={handleSave}
+            onClick={handleSubmit}
             >
                 SAVE
                 <span> </span>
           </button>
         </div>
+        <LoadingModal open={loading} />
       </OnboardingWrap>
 
     </>

@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from '../assets/logo2.png';
-import SideBar from "../components/SideBar.jsx";
+// import SideBar from "../components/SideBar.jsx";
 import HomeNavBar from "../components/HomeNavBar";
 import WeeklyScheduleCard from "../components/WeeklyScheduleCard.jsx";
 import AddScheduleModal from "../components/AddScheduleModal.jsx";
+import { getSchedules, createSchedule, updateSchedule, deleteSchedule, deleteAllSchedules, } from "../services/scheduleService";
+import { CalendarSync } from "lucide-react";
 
-import { RotateCcw } from "lucide-react";
 
 function HomePage() {
 
@@ -18,30 +19,115 @@ function HomePage() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [showActions, setShowActions] = useState(false);
 
-  const handleUpdateSchedule = (updatedSchedule) => {
-    setSchedule(
-      schedule.map((item) =>
-        item.id === updatedSchedule.id
-          ? updatedSchedule
-          : item
-      )
-    );
-  };
 
-  const handleDeleteSchedule = (scheduleId) => {
-    setSchedule(
-      schedule.filter(
-        (item) => item.id !== scheduleId
-      )
-    );
-  };
+  async function loadSchedules() {
+    const data = await getSchedules();
+    setSchedule(data);
+  }
 
-  const handleAddSchedule = (newSchedules) => {
-    setSchedule([
-      ...schedule,
-      ...newSchedules,
-    ]);
-  };
+  async function handleAddSchedule(newSchedules) {
+
+    try {
+
+        for (const schedule of newSchedules) {
+
+            await createSchedule({
+                subject: schedule.subject,
+                room: schedule.room,
+                day: schedule.day,
+                start_time: schedule.startTime,
+                end_time: schedule.endTime,
+                color: schedule.color,
+            });
+
+        }
+        await loadSchedules();
+        setIsModalOpen(false);
+    }
+
+      catch (error) {
+          console.error(error);
+          alert(error.message);
+      }
+  }
+
+  useEffect(() => {
+        loadSchedules();
+  }, []);
+
+  async function handleUpdateSchedule(updatedSchedule) {
+
+      try {
+          await updateSchedule(updatedSchedule);
+          await loadSchedules();
+          setIsEditOpen(false);
+          setEditingSchedule(null);
+      }
+
+      catch (error) {
+          console.error(error);
+          alert(error.message);
+      }
+  }
+
+  async function handleDeleteSchedule(scheduleId) {
+
+      const confirmed = window.confirm(
+          "Are you sure you want to delete this schedule?"
+      );
+
+      if (!confirmed) { return; }
+
+      try {
+          await deleteSchedule(scheduleId);
+          await loadSchedules();
+      }
+
+      catch (error) {
+          console.error(error);
+          alert(error.message);
+      }
+  }
+
+  async function handleResetSchedules() {
+
+    try {
+        await deleteAllSchedules();
+        await loadSchedules();
+    }
+
+    catch (error) {
+        console.error(error);
+        alert(error.message);
+
+    }
+
+}
+
+  // const handleUpdateSchedule = (updatedSchedule) => {
+  //   setSchedule(
+  //     schedule.map((item) =>
+  //       item.id === updatedSchedule.id
+  //         ? updatedSchedule
+  //         : item
+  //     )
+  //   );
+  // };
+
+  // const handleDeleteSchedule = (scheduleId) => {
+  //   setSchedule(
+  //     schedule.filter(
+  //       (item) => item.id !== scheduleId
+  //     )
+  //   );
+  // };
+
+  // const handleAddSchedule = (newSchedules) => {
+  //   setSchedule([
+  //     ...schedule,
+  //     ...newSchedules,
+  //   ]);
+  // };
 
   return (
     <div className="flex flex-col items-center overflow-hidden">
@@ -77,7 +163,7 @@ function HomePage() {
                 sm:text-sm ease-in-out
               "
             >
-              <RotateCcw className="w-3" />
+              <CalendarSync size={16}/>
               Reset Schedule
             </button>
 
@@ -90,7 +176,7 @@ function HomePage() {
               setShowActions(!showActions)
             }
 
-            onDeleteClick={handleDeleteSchedule}
+            // onDeleteClick={handleDeleteSchedule}
 
             onAddClick={() =>
               setIsModalOpen(true)
@@ -100,19 +186,24 @@ function HomePage() {
               setEditingSchedule(item);
               setIsEditOpen(true);
             }}
+
+            onDeleteClick={handleDeleteSchedule}
           />
 
-          <AddScheduleModal
+
+
+        <AddScheduleModal
             open={isModalOpen || isEditOpen}
             onClose={() => {
-              setIsModalOpen(false);
-              setIsEditOpen(false);
-              setEditingSchedule(null);
+                setIsModalOpen(false);
+                setIsEditOpen(false);
+                setEditingSchedule(null);
             }}
             onSave={handleAddSchedule}
             onUpdate={handleUpdateSchedule}
             editingSchedule={editingSchedule}
-          />
+        />      
+
         </div>
       </main>
 
@@ -140,8 +231,8 @@ function HomePage() {
                   <button
                     className="px-3 py-2 bg-[#111827] rounded-[10px] hover:bg-[#111827a6]
                     text-white font-extrabold transition-all duration-300 ease-in-out" 
-                    onClick={() => {
-                      setSchedule([])
+                    onClick={() => { 
+                      handleResetSchedules();
                       setResetConfirm(false)
                     }}
                   > Confirm </button>

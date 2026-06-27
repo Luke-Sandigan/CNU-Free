@@ -4,6 +4,7 @@ import { ArrowLeftToLine } from 'lucide-react';
 import { ClipboardList } from 'lucide-react';
 import { Boxes } from 'lucide-react';
 import { UserCheck } from 'lucide-react';
+import { supabase } from "../utils/supabase";
 
 import logo from '../assets/logo2.png';
 
@@ -12,14 +13,39 @@ function SideBar ({open, close}) {
     const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
 
-        useEffect(() => {
+        // useEffect(() => {
 
-        const savedProfile =
-            localStorage.getItem("studentProfile");
+        //   const savedProfile =
+        //       localStorage.getItem("studentProfile");
 
-        if (savedProfile) {setProfile(JSON.parse(savedProfile));}
+        //   if (savedProfile) {setProfile(JSON.parse(savedProfile));}
 
-    }, []);
+        // }, []);
+
+    useEffect(()=> {
+
+        async function loadProfile() {
+            const { data: { user }  } = await supabase.auth.getUser();
+
+            if (!user) return;
+
+            const { data, error } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", user.id)
+                .maybeSingle();
+
+                if (error) {
+                    console.error(error);
+                return;
+            }
+
+            setProfile(data);
+        }
+
+        loadProfile();
+
+    }, [open])
 
     if (!open) return null; 
 
@@ -97,7 +123,7 @@ function SideBar ({open, close}) {
         </div>
 
           <div className="flex flex-col ">
-              <h3 className="font-extrabold"> {profile?.firstname} {profile.lastname} </h3>
+              <h3 className="font-extrabold"> {profile?.firstname} {profile?.lastname} </h3>
               <p className="text-[13px]"> {profile?.program} - {profile?.year} </p>
           </div>
       </div>

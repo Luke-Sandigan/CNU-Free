@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import logo from '../assets/logo2.png';
 
 function AddScheduleModal({ open, onClose, onSave, onUpdate, editingSchedule, }) {
@@ -9,26 +9,188 @@ function AddScheduleModal({ open, onClose, onSave, onUpdate, editingSchedule, })
   const [room, setRoom] = useState("");
   const [color, setColor] = useState("violet");
 
-  useEffect(() => {
-    if (editingSchedule) {
-      setSelectedDays([editingSchedule.day])
-      setSubject(editingSchedule.subject);
-      setStartTime(editingSchedule.startTime);
-      setEndTime(editingSchedule.endTime);
-      setRoom(editingSchedule.room);
-      setColor(editingSchedule.color);
-    }
+  const subjectRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const endTimeRef = useRef(null);
+  const roomRef = useRef(null);
+  
+  function handleEnter(e, nextRef) {
+      if (e.key === "Enter") {
+          e.preventDefault();      
+          nextRef.current?.focus(); 
+      }
+  }
 
-    return () => {
+  function resetForm() {
       setSelectedDays(["Mon"]);
       setSubject("");
       setStartTime("");
       setEndTime("");
       setRoom("");
       setColor("violet");
-  };
+  }
+
+  useEffect(() => {
+
+    if (editingSchedule) {
+        setSelectedDays([editingSchedule.day]);
+        setSubject(editingSchedule.subject);
+        setStartTime(editingSchedule.startTime);
+        setEndTime(editingSchedule.endTime);
+        setRoom(editingSchedule.room);
+        setColor(editingSchedule.color);
+    } else {
+        resetForm();
+    }
+
   }, [editingSchedule]);
 
+
+  function handleDayChange(day) {
+
+      setSelectedDays((previousDays) => {
+          if (previousDays.includes(day)) {
+              return previousDays.filter(
+                  (selectedDay) => selectedDay !== day
+              );
+
+          }
+
+          return [
+              ...previousDays,
+              day,
+          ];
+
+      });
+
+  }
+
+    function handleSave() {
+
+      if (selectedDays.length === 0 || !subject.trim() || !startTime || !endTime || !room.trim() ) {
+          alert("Please complete all fields.");
+          return;
+      }
+
+      if (editingSchedule) {
+
+          onUpdate({
+              id: editingSchedule.id,
+              day: selectedDays[0],
+              subject,
+              startTime,
+              endTime,
+              room,
+              color,
+          });
+
+      } else {
+          const schedules = selectedDays.map((day) => ({
+              day,
+              subject,
+              startTime,
+              endTime,
+              room,
+              color,
+          }));
+
+          onSave(schedules);
+
+      }
+    }
+
+  // useEffect(() => {
+  //   if (editingSchedule) {
+  //     setSelectedDays([editingSchedule.day])
+  //     setSubject(editingSchedule.subject);
+  //     setStartTime(editingSchedule.startTime);
+  //     setEndTime(editingSchedule.endTime);
+  //     setRoom(editingSchedule.room);
+  //     setColor(editingSchedule.color);
+  //   }
+
+  //   return () => {
+  //     setSelectedDays(["Mon"]);
+  //     setSubject("");
+  //     setStartTime("");
+  //     setEndTime("");
+  //     setRoom("");
+  //     setColor("violet");
+  // };
+  // }, [editingSchedule]);
+
+
+//   const handleDayChange = (day) => {
+//     if (selectedDays.includes(day)) {
+//       setSelectedDays(
+//         selectedDays.filter(
+//           (selectedDay) => selectedDay !== day
+//         )
+//       );
+//     } else {
+//       setSelectedDays([
+//         ...selectedDays,
+//         day,
+//       ]);
+//     }
+//   };
+
+//  const handleSave = () => {
+//   if (
+//     selectedDays.length === 0 ||
+//     !subject ||
+//     !startTime ||
+//     !endTime ||
+//     !room
+//   ) {
+//     alert("Please complete all fields");
+//     return;
+//   }
+
+//   if (editingSchedule) {
+//     onUpdate({
+//       ...editingSchedule,
+//       day: selectedDays[0],
+//       subject,
+//       startTime,
+//       endTime,
+//       room,
+//       color,
+//     });
+
+//     setSelectedDays(["Mon"]);
+//     setSubject("");
+//     setStartTime("");
+//     setEndTime("");
+//     setRoom("");
+
+//     onClose();
+
+//   } else {
+
+//     const schedules = selectedDays.map(
+//       (day) => ({
+//         id: Date.now() + Math.random(),
+//         day,
+//         subject,
+//         startTime,
+//         endTime,
+//         room,
+//         color,
+//       })
+//     );
+
+//     onSave(schedules);
+
+//     setSelectedDays(["Mon"]);
+//     setSubject("");
+//     setStartTime("");
+//     setEndTime("");
+//     setRoom("");
+
+//     onClose();
+//   }
+// };
 
   const DAYS = [
   "Sun",
@@ -41,79 +203,6 @@ function AddScheduleModal({ open, onClose, onSave, onUpdate, editingSchedule, })
 ];
 
   if (!open) return null;
-
-  const handleDayChange = (day) => {
-    if (selectedDays.includes(day)) {
-      setSelectedDays(
-        selectedDays.filter(
-          (selectedDay) => selectedDay !== day
-        )
-      );
-    } else {
-      setSelectedDays([
-        ...selectedDays,
-        day,
-      ]);
-    }
-  };
-
- const handleSave = () => {
-  if (
-    selectedDays.length === 0 ||
-    !subject ||
-    !startTime ||
-    !endTime ||
-    !room
-  ) {
-    alert("Please complete all fields");
-    return;
-  }
-
-  if (editingSchedule) {
-    onUpdate({
-      ...editingSchedule,
-      day: selectedDays[0],
-      subject,
-      startTime,
-      endTime,
-      room,
-      color,
-    });
-
-    setSelectedDays(["Mon"]);
-    setSubject("");
-    setStartTime("");
-    setEndTime("");
-    setRoom("");
-
-    onClose();
-
-  } else {
-
-    const schedules = selectedDays.map(
-      (day) => ({
-        id: Date.now() + Math.random(),
-        day,
-        subject,
-        startTime,
-        endTime,
-        room,
-        color,
-      })
-    );
-
-    onSave(schedules);
-
-    setSelectedDays(["Mon"]);
-    setSubject("");
-    setStartTime("");
-    setEndTime("");
-    setRoom("");
-
-    onClose();
-  }
-};
-
 
 
   return (
@@ -134,12 +223,12 @@ function AddScheduleModal({ open, onClose, onSave, onUpdate, editingSchedule, })
         <div className="flex flex-col gap-3 w-full">
           <div className="flex items-center justify-between gap-2 w-full mb-1">
             <div className=" flex flex-col gap-2 w-full">
-              <label className="font-extrabold text:sm" > ☀️ Choose a day </label>
+              <label className="font-extrabold text:sm flex items-center gap-2" > ☀️ Choose a day </label>
               <div className="flex flex-wrap gap-2">
                 {DAYS.map((day) => (
                   <label
                     key={day}
-                    className="flex items-center gap-1 rounded border px-2 py-1 text-sm"
+                    className=" w-32 flex items-center gap-1 rounded border px-2 py-1 text-xs"
                   >
                     <input
                       type="checkbox"
@@ -158,14 +247,16 @@ function AddScheduleModal({ open, onClose, onSave, onUpdate, editingSchedule, })
           </div>
           
             <div className="flex flex-col gap-2 text:md">
-              <label className="font-extrabold"> 📚 Subject </label>
+              <label className="font-extrabold"> 📚 Subject Code </label>
               <input
+                ref={subjectRef}
                 className="rounded-lg border p-2"
-                placeholder="Subject"
+                placeholder="e.g., SOCS104"
                 value={subject}
                 onChange={(e) =>
                   setSubject(e.target.value)
                 }
+                onKeyDown={(e) => handleEnter(e, startTimeRef)}
               />
             </div>
             
@@ -173,32 +264,37 @@ function AddScheduleModal({ open, onClose, onSave, onUpdate, editingSchedule, })
             <div className="flex flex-col w-full gap-2">
               <label className="font-extrabold" > ⏰ Start Time </label>
               <input
+                ref={startTimeRef}
                 className="rounded-lg border p-2"
                 type="time"
                 value={startTime}
                 onChange={(e) =>
                   setStartTime(e.target.value)
                 }
+                onKeyDown={(e) => handleEnter(e, endTimeRef)}
               />
             </div>
 
             <div className="flex flex-col w-full gap-2">
               <label className="font-extrabold"> ⏰ End Time </label>
               <input
+               ref={endTimeRef}
                 className="rounded-lg border p-2"
                 type="time"
                 value={endTime}
                 onChange={(e) =>
                   setEndTime(e.target.value)
                 }
+                onKeyDown={(e) => handleEnter(e, roomRef)}
               />
             </div>
           </div>
           <div className="flex flex-col gap-2 mb-4">
-            <label className="font-extrabold"> 🏣 Room number</label>
+            <label className="font-extrabold"> 🏣 Room Number</label>
             <input
+              ref={roomRef}
               className="rounded-lg border p-2 text-md"
-              placeholder="Room"
+              placeholder="e.g., AL212/LAB-2"
               value={room}
               onChange={(e) =>
                 setRoom(e.target.value)

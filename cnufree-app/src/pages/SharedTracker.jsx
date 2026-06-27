@@ -25,7 +25,7 @@ function SharedTracker() {
         <div className="flex justify-between items-center mb-5 px-5 py-5 bg-[#111827] ">
           <div className="flex flex-col">
             <h1 className="font-extrabold text-xl sm:text-4xl text-white"> Friend's Tracker </h1>
-            <p className="text-md text-slate-400"> Find who's friend is free! </p>
+            <p className="text-md text-slate-400"> Find out which friend is free! </p>
           </div>
           
           <div> 

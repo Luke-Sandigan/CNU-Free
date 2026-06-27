@@ -8,6 +8,7 @@ import AppLayout from './layouts/app-layout.jsx';
 import './App.css';
 import SharedTracker from "./pages/SharedTracker.jsx";
 import Connection from "./pages/Connection.jsx";
+import AuthCallback from "./pages/AuthCallback.jsx";
 
 
   
@@ -22,7 +23,11 @@ const router = createBrowserRouter([
       {
         path: '/SignInPage',
         element:  <SignInPage />
-      },  
+      },
+      {
+        path: '/Auth/callback',
+        element: <AuthCallback/>
+      },
       {
         path: '/Onboarding',
         element: <Onboarding/> 

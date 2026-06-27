@@ -5,39 +5,40 @@ import GoogleIcon from '../components/GoogleIcon'
 import AppleIcon from '../components/AppleIcon'
 import BackButton from '../components/BackComponent';
 // import { motion } from "framer-motion";
-// import { supabase } from '../utils/supabase'
+import { supabase } from '../utils/supabase'
 
 function SignInPage() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
 
-//     async function handleContinue() {
-//     //     const { error } = await supabase.auth.signInWithOtp({
-//     //         email,
-//     //     });
+    // async function handleContinue() {
+        
+    //     const { error } = await supabase.auth.signInWithOtp({
+    //         email,
+    //     });
 
-//     //     if (error) {
-//     //         alert(error.message);
-//     //         return;
-//     //     }
+    //     if (error) {
+    //         alert(error.message);
+    //         return;
+    //     }
 
-//     //     navigate("/VerificationPage", {
-//     //         state: { email }
-//     //     });
-//     // }
+    //     navigate("/VerificationPage", {
+    //         state: { email }
+    //     });
+    // }
 
-//     // async function handleGoogleLogin() {
-//     //     const { error } = await supabase.auth.signInWithOAuth({
-//     //         provider: "google",
-//     //         options: {
-//     //             redirectTo: "http://localhost:5173/Onborading",
-//     //         },
-//     //     });
+    async function handleGoogleLogin() {
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: "google",
+            options: {
+                redirectTo: "http://localhost:5173/auth/callback"
+            }
+        });
 
-//     //     if (error) {
-//     //         alert(error.message);
-//     //     }
-//     }
+        if (error) {
+            alert(error.message);
+        }
+    }
 
   return (
 
@@ -50,7 +51,9 @@ function SignInPage() {
          from CNU-Free and can opt out at any time through the unsubscribe link in our messages.</p>
     
 
-                <button className="hover:border-[#FCE034] hover:scale-105 hover:shadow-[0_0_30px_rgba(252,224,52,0.9)] flex items-center justify-center gap-3 w-full border border-gray-300 rounded-lg py-3 px-4 font-semibold text-gray-800 hover:bg-[#FDFB8F] transition-all duration-300 ease-in-out mb-2">
+                <button 
+                onClick={handleGoogleLogin}
+                className="hover:border-[#FCE034] hover:scale-105 hover:shadow-[0_0_30px_rgba(252,224,52,0.9)] flex items-center justify-center gap-3 w-full border border-gray-300 rounded-lg py-3 px-4 font-semibold text-gray-800 hover:bg-[#FDFB8F] transition-all duration-300 ease-in-out mb-2">
                     <GoogleIcon />
                     Continue with Google
                 </button>

@@ -2,6 +2,8 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import OnboardingWrap from '../components/OnboardingWrap';
 import ProgressBar from '../components/ProgressBar';
+import { supabase } from "../utils/supabase";
+import LoadingModal from "../components/LoadingModal";
 
 function Onboarding() {
 
@@ -18,6 +20,47 @@ function Onboarding() {
     const [program, setProgram] = useState("")
 
     const [username, setUsername] = useState("")
+    const [loading, setLoading] = useState(false);
+
+async function handleSubmit() {
+
+    setLoading(true);
+
+    try {
+
+        const {
+            data: { user }
+        } = await supabase.auth.getUser();
+
+        if (!user) { return; }
+
+        const { error } = await supabase
+            .from("profiles")
+            .update({
+                firstname,
+                lastname,
+                username,
+                school_name: school,
+                id_num: IDnum,
+                year,
+                program,
+                onboarding_complete: true
+            })
+            .eq("id", user.id);
+
+        if (error) { throw error; }
+
+        navigate("/Home");
+
+    } catch (error) {
+
+        console.error(error);
+        alert(error.message);
+
+    } finally {
+        setLoading(false);
+    }
+}
 
   return (
     <div   className="bg-[#111827] w-full h-screen flex flex-col items-center gap-4">
@@ -282,7 +325,7 @@ function Onboarding() {
                                         id="username"
                                         type="text"
                                         value={username}
-                                        placeholder="@iloveyoubabygirl"
+                                        placeholder="juandelacruz"
                                         onChange={(e)=> setUsername(e.target.value)}
                                         className="w-full border text-sm border-gray-300 rounded-lg px-4 py-3 text-gray-900 font-bold
                                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2 transition"   
@@ -302,24 +345,26 @@ function Onboarding() {
                                         className="ml-auto flex gap-2 py-[10px] px-[15px] 
                                         font-bold rounded-[8px] text-sm transition-all duration-300 ease-in-out 
                                         text-amber-50 bg-[#111827] hover:bg-[#5A98E6] "
-                                        onClick={() => {
+                                        onClick={handleSubmit}
+                                            
+                                        //     () => {
                     
-                                              const profileData = {
-                                                                school,
-                                                                IDnum,
-                                                                firstname,
-                                                                lastname,
-                                                                year,
-                                                                program,
-                                                                username,
-                                                            };
+                                        //       const profileData = {
+                                        //                         school,
+                                        //                         IDnum,
+                                        //                         firstname,
+                                        //                         lastname,
+                                        //                         year,
+                                        //                         program,
+                                        //                         username,
+                                        //                     };
 
-                                                            localStorage.setItem("studentProfile",                                                         
-                                                                JSON.stringify(profileData)
-                                                            );
+                                        //                     localStorage.setItem("studentProfile",                                                         
+                                        //                         JSON.stringify(profileData)
+                                        //                     );
                                                             
-                                            navigate("/Home")
-                                        }}
+                                        //     navigate("/Home")
+                                        // }
                                     >
                                         SUBMIT
                                         <span> </span>
@@ -334,6 +379,7 @@ function Onboarding() {
                     )}     
 
 
+               <LoadingModal open={loading} />
 
     </div>
   )

@@ -1,22 +1,77 @@
-
 import { useState, useEffect } from "react";
 import logo from '../assets/logo2.png';
 import { ArrowLeftToLine } from 'lucide-react';
 import { SquarePen } from 'lucide-react';
 import EditProfile from './EditProfile';
+// import { supabase } from "../utils/supabase";
+import { getCurrentProfile } from "../services/profileService";
 
 function ProfileModal({open, close, }) {
   
     const [editProfileOpen, setEditProfileClose] = useState(false);
     const [profile, setProfile] = useState(null);
 
+
+    // useEffect(() => {
+
+    //     const savedProfile = localStorage.getItem("studentProfile");
+
+    //     if (savedProfile) {setProfile(JSON.parse(savedProfile));}
+
+    // }, []);
+
+    
+
+    async function loadProfile() {
+
+        try {
+
+            const data = await getCurrentProfile();
+
+            setProfile(data);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    }
+    
     useEffect(() => {
 
-        const savedProfile = localStorage.getItem("studentProfile");
+        if (!open) return;
 
-        if (savedProfile) {setProfile(JSON.parse(savedProfile));}
+        loadProfile();
 
-    }, []);
+    }, [open]);
+
+
+
+    // useEffect(()=> {
+
+    //     async function loadProfile() {
+    //         const { data: { user }  } = await supabase.auth.getUser();
+
+    //         if (!user) return;
+
+    //         const { data, error } = await supabase
+    //             .from("profiles")
+    //             .select("*")
+    //             .eq("id", user.id)
+    //             .maybeSingle();
+
+    //             if (error) {
+    //                 console.error(error);
+    //             return;
+    //         }
+
+    //         setProfile(data);
+    //     }
+
+    //     loadProfile();
+
+    // }, [open])
 
 
 
@@ -29,7 +84,8 @@ function ProfileModal({open, close, }) {
         openEdit={editProfileOpen}
         closeEdit={()=>setEditProfileClose(false)}
         profile={profile}
-        onUpdateProfile={(updatedProfile) => setProfile(updatedProfile)}
+        refreshProfile={loadProfile}
+        // onUpdateProfile={(updatedProfile) => setProfile(updatedProfile)}
     />
 
     <div
@@ -86,7 +142,7 @@ function ProfileModal({open, close, }) {
 
                 <div className="p-8  flex flex-col border rounded-[15px] mb-8">
                     <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm border px-1 font-extrabold"> {profile?.school} </span>
+                        <span className="text-sm border px-1 font-extrabold"> {profile?.school_name} </span>
                         <span className="text-[12px] font-bold text-slate-400"> STUDENT ID CARD </span>
                     </div>
                     
@@ -103,7 +159,7 @@ function ProfileModal({open, close, }) {
 
                             <div>
                                 <div className="font-extrabold text-[12px] 
-                                text-slate-400 flex items-center gap-2 "> ID No: <span className="text-black"> {profile?.IDnum} </span>   </div>
+                                text-slate-400 flex items-center gap-2 "> ID No: <span className="text-black"> {profile?.id_num} </span>   </div>
                                 <div className="font-extrabold text-[12px] 
                                 text-slate-400 flex items-center  gap-2  "> Year:  <span className="text-black" > {profile?.year} - {profile?.program} </span>  </div>
                             </div>
@@ -147,7 +203,6 @@ function ProfileModal({open, close, }) {
         </div>    
    </aside>
 
-   
 
     </>
   )
