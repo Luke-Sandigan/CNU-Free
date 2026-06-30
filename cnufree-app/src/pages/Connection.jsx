@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserRoundPlus } from 'lucide-react';
-import SideBar from '../components/SideBar.jsx'
+// import SideBar from '../components/SideBar.jsx'
 import HomeNavBar from "../components/HomeNavBar"
 import SearchProfileModal from "../components/searchModal";
+import { getFriends } from "../services/friendService";
 
 function Connection() {
 
@@ -12,12 +13,31 @@ function Connection() {
     const [showMenu, setShowMenu] = useState(false);
     const [showSearchModal, setShowSearchModal] = useState(false);
 
+    const [friends, setFriends] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+
+    async function loadFriends() {
+        try {
+            setLoading(true);
+            const data = await getFriends();
+            setFriends(data);
+
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        loadFriends();
+    }, []);
+
   return (
     <div className="flex flex-col items-center">
-      <SideBar
-        open={isOpen}
-        close={()=> setIsOpen(false)}
-       />
+
       <HomeNavBar
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -122,91 +142,114 @@ function Connection() {
 
         </div>
 
-      {isActive === "friends" &&  (
-        <div className="flex flex-wrap w-full gap-4 sm:gap-5 items-center justify-center  sm:items-start sm:justify-start">
+{isActive === "friends" && (
 
-          <div className=" flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5">
-            <div  
-              className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]  flex
-              hover:scale-105 py-3  text-lg bg-slate-400 font-extrabold rounded-[5px]  px-4  mb-2
-              transition-all duration-300 ease-in-out "
-              > LS 
+    loading ? (
+
+        <div className="flex w-full justify-center py-20">
+            <div className="flex flex-col items-center gap-3">
+
+                <div
+                    className="
+                        h-10
+                        w-10
+                        rounded-full
+                        border-4
+                        border-slate-300
+                        border-t-[#111824]
+                        animate-spin
+                    "
+                />
+
+                <p className="text-slate-500 font-medium">
+                    Loading friends...
+                </p>
+
             </div>
-
-            <div className="font-extrabold text-md">
-                Luke Sandigan : <span className="font-light text-sm"> 2  - BSIT </span>
-            </div>
-
-            <div className="font-extrabold text-[12px] text-slate-600 mb-3">
-                @ilovemybabygirl
-            </div>
-
-            <div className="font-extrabold text-sm bg-[#E1F6EF] rounded-xl px-3 py-2 text-[#10B981] mb-8">
-                Connected
-            </div>
-
-            <button 
-            className="w-full bg-red-600 font-extrabold text-white py-2 rounded-xl">
-                Unfriend
-            </button>
-          </div>
-          <div className=" flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5">
-            <div  
-              className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]  flex
-              hover:scale-105 py-3  text-lg bg-slate-400 font-extrabold rounded-[5px]  px-4  mb-2
-              transition-all duration-300 ease-in-out "
-              > LS 
-            </div>
-
-            <div className="font-extrabold text-md">
-                Luke Sandigan : <span className="font-light text-sm"> 2  - BSIT </span>
-            </div>
-
-            <div className="font-extrabold text-[12px] text-slate-600 mb-3">
-                @ilovemybabygirl
-            </div>
-
-            <div className="font-extrabold text-sm bg-[#E1F6EF] rounded-xl px-3 py-2 text-[#10B981] mb-8">
-                Connected
-            </div>
-
-            <button 
-            className="w-full bg-red-600 font-extrabold text-white py-2 rounded-xl">
-                Unfriend
-            </button>
-          </div>
-
-          <div className=" flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5">
-            <div  
-              className="hover:bg-[#111827be] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]  flex
-              hover:scale-105 py-3  text-lg bg-slate-400 font-extrabold rounded-[5px]  px-4  mb-2
-              transition-all duration-300 ease-in-out "
-              > LS 
-            </div>
-
-            <div className="font-extrabold text-md">
-                Luke Sandigan : <span className="font-light text-sm"> 2  - BSIT </span>
-            </div>
-
-            <div className="font-extrabold text-[12px] text-slate-600 mb-3">
-                @ilovemybabygirl
-            </div>
-
-            <div className="font-extrabold text-sm bg-[#E1F6EF] rounded-xl px-3 py-2 text-[#10B981] mb-8">
-                Connected
-            </div>
-
-            <button 
-            className="w-full bg-red-600 font-extrabold text-white py-2 rounded-xl">
-                Unfriend
-            </button>
-          </div>
-
-        
         </div>
 
-      )}
+    ) : friends.length === 0 ? (
 
+        <div className="w-full py-20 flex flex-col items-center">
+
+            <span className="text-6xl mb-3">
+                👥
+            </span>
+
+            <h2 className="text-xl font-bold">
+                No friends yet
+            </h2>
+
+            <p className="text-slate-500 mt-2">
+                Search for classmates and send them a friend request.
+            </p>
+
+        </div>
+
+    ) : (
+
+        <div className="flex flex-wrap w-full gap-4 sm:gap-5 items-center justify-center sm:items-start sm:justify-start">
+
+            {friends.map((friend) => (
+
+                <div
+                    key={friend.friend.id}
+                    className="flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5"
+                >
+
+                    <div
+                        className="
+                            hover:bg-[#111827be]
+                            hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]
+                            flex
+                            hover:scale-105
+                            py-3
+                            text-lg
+                            bg-slate-400
+                            font-extrabold
+                            rounded-[5px]
+                            px-4
+                            mb-2
+                            transition-all
+                            duration-300
+                            ease-in-out
+                        "
+                    >
+                        {friend.friend.firstname.charAt(0)}
+                        {friend.friend.lastname.charAt(0)}
+                    </div>
+
+                    <div className="font-extrabold text-md">
+                        {friend.friend.firstname}{" "}
+                        {friend.friend.lastname}
+                        <span className="font-light"> • </span>
+
+                        <span className="font-light text-sm">
+                            {friend.friend.year} - {friend.friend.program}
+                        </span>
+                    </div>
+
+                    <div className="font-extrabold text-[12px] text-slate-600 mb-3">
+                        @{friend.friend.username}
+                    </div>
+
+                    <div className="font-extrabold text-sm bg-[#E1F6EF] rounded-xl px-3 py-2 text-[#10B981] mb-8">
+                        Connected
+                    </div>
+
+                    <button className="w-full bg-red-600 font-extrabold text-white py-2 rounded-xl">
+                        Unfriend
+                    </button>
+
+                </div>
+
+            ))}
+
+        </div>
+
+    )
+
+)}
       {isActive === "friendReq" &&  (
         <div className="flex flex-wrap w-full gap-4 sm:gap-5 items-center justify-center  sm:items-start sm:justify-start">
 
@@ -219,7 +262,7 @@ function Connection() {
             </div>
 
             <div className="font-extrabold text-md">
-                Luke Sandigan : <span className="font-light text-sm"> 2  - BSIT </span>
+                Luke Sandigan • <span className="font-light text-sm"> 2  - BSIT </span>
             </div>
 
             <div className="font-extrabold text-[12px] text-slate-600 mb-3">
@@ -230,10 +273,19 @@ function Connection() {
                 Pending Request
             </div>
 
+          <div className="flex gap-2 items-center w-full">
             <button 
             className="w-full bg-[#111824] font-extrabold text-white py-2 rounded-xl">
                 Accept
             </button>
+
+            
+            <button 
+            className="w-full bg-red-700 font-extrabold text-white py-2 rounded-xl">
+                Reject
+            </button>
+
+          </div>
           </div>
 
         
@@ -253,7 +305,7 @@ function Connection() {
             </div>
 
             <div className="font-extrabold text-md">
-                Luke Sandigan : <span className="font-light text-sm"> 2  - BSIT </span>
+                Luke Sandigan • <span className="font-light text-sm"> 2  - BSIT </span>
             </div>
 
             <div className="font-extrabold text-[12px] text-slate-600 mb-3">

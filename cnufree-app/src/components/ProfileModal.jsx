@@ -1,15 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState,  useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from '../assets/logo2.png';
 import { ArrowLeftToLine } from 'lucide-react';
 import { SquarePen } from 'lucide-react';
 import EditProfile from './EditProfile';
-// import { supabase } from "../utils/supabase";
+import { supabase } from "../utils/supabase";
 import { getCurrentProfile } from "../services/profileService";
 
 function ProfileModal({open, close, }) {
-  
+    const navigate = useNavigate();
     const [editProfileOpen, setEditProfileClose] = useState(false);
     const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(false);
 
 
     // useEffect(() => {
@@ -25,15 +27,13 @@ function ProfileModal({open, close, }) {
     async function loadProfile() {
 
         try {
-
+            setLoading(true);
             const data = await getCurrentProfile();
-
             setProfile(data);
-
         } catch (error) {
-
             console.error(error);
-
+        } finally {
+            setLoading(false);
         }
 
     }
@@ -46,6 +46,17 @@ function ProfileModal({open, close, }) {
 
     }, [open]);
 
+    async function handleLogout() {
+
+            const { error } = await supabase.auth.signOut();
+
+            if (error) {
+                console.error(error);
+                return;
+            }
+
+            navigate("/");
+    }
 
 
     // useEffect(()=> {
@@ -140,35 +151,78 @@ function ProfileModal({open, close, }) {
                     </div>
                 </div>
 
-                <div className="p-8  flex flex-col border rounded-[15px] mb-8">
-                    <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm border px-1 font-extrabold"> {profile?.school_name} </span>
-                        <span className="text-[12px] font-bold text-slate-400"> STUDENT ID CARD </span>
-                    </div>
-                    
-                    <div className="flex gap-5 w-full mb-8 ">
-                        <div className="flex items-center justify-center w-17 h-17 border rounded bg-slate-300">
-                            <span className="font-extrabold text-slate-600 text-[30px]"> {profile?.firstname?.charAt(0).toUpperCase()} </span>
+                {loading ? (
+
+                    <div className="p-8 border rounded-[15px] mb-8 animate-pulse">
+                        <div className="flex justify-between mb-5">
+                            <div className="h-5 w-24 bg-slate-200 rounded"></div>
+                            <div className="h-4 w-28 bg-slate-200 rounded"></div>
                         </div>
 
-                        <div className="flex flex-col gap-2">
-                            <div className="flex flex-col">
-                                <span className="font-extrabold"> {profile?.lastname} </span>
-                                <span className="font-extrabold text-[13px] text-slate-400"> {profile?.firstname}  </span>
-                            </div>
-
-                            <div>
-                                <div className="font-extrabold text-[12px] 
-                                text-slate-400 flex items-center gap-2 "> ID No: <span className="text-black"> {profile?.id_num} </span>   </div>
-                                <div className="font-extrabold text-[12px] 
-                                text-slate-400 flex items-center  gap-2  "> Year:  <span className="text-black" > {profile?.year} - {profile?.program} </span>  </div>
+                        <div className="flex gap-5 mb-8">
+                            <div className="w-17 h-17 rounded bg-slate-200"></div>
+                            <div className="flex-1 space-y-3">
+                                <div className="h-5 w-40 bg-slate-200 rounded"></div>
+                                <div className="h-4 w-28 bg-slate-200 rounded"></div>
+                                <div className="h-4 w-44 bg-slate-200 rounded"></div>
+                                <div className="h-4 w-36 bg-slate-200 rounded"></div>
                             </div>
                         </div>
+                        <div className="border-t mb-5"></div>
+                        <div className="h-4 bg-slate-200 rounded"></div>
                     </div>
 
-                    <div className="border-t border-slate-300 mb-5"> </div>
-                    <div className="w-full h-4 bg-[#111827]"> </div>
-                </div> 
+                ) : (
+
+                    <div className="p-8 flex flex-col border rounded-[15px] mb-8">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-sm border px-1 font-extrabold">
+                                {profile?.school_name}
+                            </span>
+                            <span className="text-[12px] font-bold text-slate-400">
+                                STUDENT ID CARD
+                            </span>
+                        </div>
+                        <div className="flex gap-5 w-full mb-8">
+                            <div className="flex items-center justify-center w-17 h-17 border rounded bg-slate-300">
+                                <span className="font-extrabold text-slate-600 text-[30px]">
+                                    {profile?.firstname?.charAt(0).toUpperCase()}
+                                </span>
+                            </div>
+
+                            <div className="flex flex-col gap-2">
+                                <div className="flex flex-col">
+                                    <span className="font-extrabold">
+                                        {profile?.lastname}
+                                    </span>
+                                    <span className="font-extrabold text-[13px] text-slate-400">
+                                        {profile?.firstname}
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <div className="font-extrabold text-[12px] text-slate-400 flex items-center gap-2">
+                                        ID No:
+                                        <span className="text-black">
+                                            {profile?.id_num}
+                                        </span>
+                                    </div>
+
+                                    <div className="font-extrabold text-[12px] text-slate-400 flex items-center gap-2">
+                                        Year:
+                                        <span className="text-black">
+                                            {profile?.year} - {profile?.program}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-slate-300 mb-5"></div>
+                        <div className="w-full h-4 bg-[#111827]"></div>
+
+                    </div>
+                )}
                 
                 <div className="font-extrabold text-[13px] text-slate-400 mb-2">
                     USERNAME
@@ -196,7 +250,9 @@ function ProfileModal({open, close, }) {
             </div>
 
             <div className="w-full flex items-center">
-                <button className="w-full py-2 flex items-center justify-center transition-all duration-300 ease-in-out
+                <button 
+                onClick={handleLogout}
+                className="w-full py-2 flex items-center justify-center transition-all duration-300 ease-in-out
                 border rounded-[10px] bg-red-600 font-extrabold text-white hover:bg-[#223151]
                 "> Log Out </button>
             </div>

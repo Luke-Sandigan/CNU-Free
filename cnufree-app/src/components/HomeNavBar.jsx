@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { Menu } from 'lucide-react';
+import { Menu, Search, Bell } from 'lucide-react';
 import { motion } from "framer-motion";
-import { Search } from 'lucide-react';
 import { useState, useEffect } from "react";
 import logo from '../assets/logo2.png';
 import ProfileModal from "./ProfileModal";
 import SideBar from "./SideBar";
 import { supabase } from "../utils/supabase";
+import NotificationModal from "./NotificationModal";
 // import SideBar from './Sidebar.jsx'
 
 
@@ -16,6 +16,7 @@ function HomeNavBar({isOpen, setIsOpen}) {
     const navigate = useNavigate();
     const [isProfileOpen, setProfileOpen] = useState(false);
     const [profile, setProfile] = useState(null);
+    const [isNotificationOpen, setNotificationOpen] = useState(false);
     
     //  useEffect(() => {
 
@@ -101,6 +102,11 @@ function HomeNavBar({isOpen, setIsOpen}) {
           close={()=> setProfileOpen(false)}
         />
 
+      <NotificationModal
+          open={isNotificationOpen}
+          close={() => setNotificationOpen(false)}
+      />
+      
       <SideBar
         open={isOpen}
         close={() => setIsOpen(false)}
@@ -145,6 +151,19 @@ function HomeNavBar({isOpen, setIsOpen}) {
 
 
           <div className="items-center flex gap-1">
+            <button
+                onClick={() => setNotificationOpen(true)}
+                className="
+                    relative
+                    rounded-md
+                    border
+                    border-slate-200
+                    p-2
+                    hover:bg-slate-100
+                "
+            >
+                <Bell size={20} />
+            </button>
              <button 
              className=" hover:bg-[#111827] hover:text-white border border-slate-200 hidden sm:block  rounded-[5px] px-4 py-2 text-[15px] font-bold transition-all duration-300 ease-in-out"
              onClick={handleLogout} >  Log Out 
