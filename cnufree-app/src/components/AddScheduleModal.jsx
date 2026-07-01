@@ -193,14 +193,14 @@ function AddScheduleModal({ open, onClose, onSave, onUpdate, editingSchedule, })
 // };
 
   const DAYS = [
-  "Sun",
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-  "Fri",
-  "Sat",
-];
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+  ];
 
   if (!open) return null;
 

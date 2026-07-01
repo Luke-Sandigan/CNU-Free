@@ -2,7 +2,6 @@ import { supabase } from "../utils/supabase";
 
 export async function createSchedule(scheduleData) {
 
-    console.log("scheduleData:", scheduleData);
 
     const {
         data: { user },
@@ -106,3 +105,4 @@ export async function deleteAllSchedules() {
         throw error;
     }
 }
+

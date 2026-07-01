@@ -189,12 +189,25 @@ function NotificationModal({ open, close }) {
                 </div>
 
                 {loading && (
-
-                    <p className="text-center mt-3">
-                        Loading...
-                    </p>
-
+                    <div className="flex flex-col gap-2 items-center">
+                        <div
+                            className="
+                                h-5
+                                w-5
+                                rounded-full
+                                border-4
+                                border-slate-300
+                                border-t-[#111824]
+                                animate-spin
+                            "
+                        />
+                    
+                        <p className="text-center text-slate-500">
+                            Loading...
+                        </p>
+                    </div>
                 )}
+                
             </div>
 
         </div>

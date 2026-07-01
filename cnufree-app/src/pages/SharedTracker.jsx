@@ -1,13 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "../utils/supabase";
 import SideBar from '../components/SideBar.jsx'
 import HomeNavBar from "../components/HomeNavBar"
 import { Eye } from 'lucide-react';
+import { getFriendSchedules } from "../services/friendService";
+import { getCurrentStatus } from "../services/getCurrentStatus";
+import { formatTime } from "../utils/formatTime";
 // import OnboardingWrap from "../components/OnboardingWrap.jsx";
 
 
 function SharedTracker() {
 
-     const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [friends, setFriends] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  async function loadFriends() {
+
+      try {
+          setLoading(true);
+          const data = await getFriendSchedules();
+          setFriends(data);
+      } catch (error) {
+          console.error(error);
+      } finally {
+          setLoading(false);
+      }
+
+  }
+
+    useEffect(() => {
+        loadFriends();
+       const channel = supabase
+            .channel("friend-schedules")
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "schedules",
+                },
+                (payload) => {
+                    console.log("EVENT:", payload);
+                    loadFriends();
+                }
+            )
+            .subscribe((status, err) => {
+                console.log("Status:", status);
+                console.log("Error:", err);
+            });
+        return () => {
+            supabase.removeChannel(channel);
+        };
+
+    }, []);
 
   return (
     <div className="flex flex-col items-center ">
@@ -22,7 +68,7 @@ function SharedTracker() {
 
       <div className="flex flex-col max-w-lg w-full mt-15">
 
-        <div className="flex justify-between items-center mb-5 px-5 py-5 bg-[#111827] ">
+        <div className="flex justify-between items-center  px-5 py-5 bg-[#111827] ">
           <div className="flex flex-col">
             <h1 className="font-extrabold text-xl sm:text-4xl text-white"> Friend's Tracker </h1>
             <p className="text-md text-slate-400"> Find out which friend is free! </p>
@@ -40,60 +86,141 @@ function SharedTracker() {
             <p className="sm:text-sm text-slate-500 flex items-center gap-1 text-[13px]"> See your friend's schedule by pressing the " <Eye className="size-4"/> " button. </p>
           </div>
 
-          <div className="flex flex-col gap-3">
+         <div className="flex flex-col gap-3">
 
-              <div className="flex items-center justify-between">
-                <div className="flex gap-4 items-center justify-center mb-2"> 
-                    <div className="bg-[#10B981] rounded-full size-2 sm:size-2"/> 
-                    <div className="flex flex-col w-[100px] sm:w-[125px]">
-                        <h1 className="text-sm font-extrabold"> Luke </h1>
-                        <p className=" text-xs font-bold text-slate-400"> @ilovemybabygirl </p>
+    {loading && (
+
+            <div className="flex flex-col items-center justify-center gap-3 ">
+
+                <div
+                    className="
+                        h-10
+                        w-10
+                        rounded-full
+                        border-4
+                        border-slate-300
+                        border-t-[#111824]
+                        animate-spin
+                    "
+                />
+
+                <p className="text-slate-500 font-medium">
+                    Loading friends...
+                </p>
+
+            </div>
+
+    )}
+
+    {!loading && friends.length === 0 && (
+
+            <p className="text-center text-slate-500">
+
+                No friends yet.
+
+            </p>
+
+        )}
+
+        {!loading &&
+
+            friends.map((friend) => {
+                const status = getCurrentStatus(friend.friend.schedules);
+
+                return (
+
+                    <div
+                        key={friend.friend.id}
+                        className="flex items-center justify-between"
+                    >
+
+                        <div className="flex gap-4 items-center">
+                            <div
+                                className={`rounded-full size-2
+                                    ${
+                                        status.status === "Busy"
+                                            ? "bg-red-500"
+                                            : "bg-green-500"
+                                    }
+                                `}
+                            />
+
+                            <div
+                                className=" flex flex-col w-[120px] "                              
+                            >
+                                <h1 className="font-extrabold">
+                                    {friend.friend.firstname}
+                                </h1>
+
+                                <p
+                                    className=" text-xs text-slate-500"
+                                >
+                                    @{friend.friend.username}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            className={` border rounded-lg px-3 py-2
+                                ${
+                                    status.status === "Busy"
+                                        ? "bg-red-100 border-red-400"
+                                        : "bg-green-100 border-green-400"
+                                }
+                            `}
+                        >
+
+                            <div className="flex gap-2 items-center">
+                                <div
+                                    className={`
+                                        rounded-full
+                                        size-2
+                                        ${
+                                            status.status === "Busy"
+                                                ? "bg-red-500"
+                                                : "bg-green-500"
+                                        }
+                                    `}
+                                />
+
+                                <span
+                                    className={`
+                                        text-xs
+                                        font-bold
+                                        ${
+                                            status.status === "Busy"
+                                                ? "text-red-600"
+                                                : "text-green-600"
+                                        }
+                                    `}
+                                >
+                                    {
+                                        status.status === "Busy"
+                                            ?
+                                            `Busy until ${formatTime(status.end)}` :status.nextSubject ?
+                                                `Free until ${formatTime(status.start)}` : "Free all day"
+                                    }
+                                </span>
+                            </div>
+                        </div>
+
+                        <button
+                            className=" p-2 bg-[#111827] text-white rounded"
+                        >
+                            <Eye size={18} />
+                        </button>
+
                     </div>
 
-                </div>
+                );
 
-                <div className=" bg-[#E1F6EF] flex flex-col border p-2 border-[#10B981] rounded-lg"> 
-                  <div className="flex gap-2 items-center justify-center">
-                    <div className="bg-[#10B981] rounded-full size-2"/> 
-                    <div className="text-[#10B981] text-[10px] sm:text-sm font-extrabold "> Free: <span className="font-light"> 9:00 am - 12:00 am  </span> </div>
-                  </div>
-                    
-                </div>
-                <button
-                  className="p-1 bg-[#111827] text-white rounded"
-                >
-                  <Eye className="size-5"/>
-                </button>
-              </div>
+            })
 
-              <div className="flex items-center justify-between">
-                <div className="flex gap-4 items-center justify-center mb-2"> 
-                    <div className="bg-[#EF4444] rounded-full size-2"/> 
-                    <div className="flex flex-col  w-[100px] sm:w-[125px]">
-                        <h1 className="text-sm font-extrabold"> Krisselle </h1>
-                        <p className=" text-xs font-bold text-slate-400"> @aintabitch </p>
-                    </div>
+        }
 
-                </div>
-
-                <div className=" bg-[#FCDADA] flex flex-col border p-2 border-[#EF4444] rounded-lg"> 
-                  <div className="flex gap-2 items-center justify-center">
-                    <div className="bg-[#EF4444] rounded-full size-2"/> 
-                    <div className="text-[#EF4444] text-[10px] sm:text-sm font-extrabold "> Busy: <span className="font-light"> 9:00 am - 12:00 am  </span> </div>
-                  </div>
-                    
-                </div>
-                <button
-                  className="p-1 bg-[#111827] text-white rounded"
-                >
-                  <Eye className="size-5"/>
-                </button>
-              </div>
-
-              
-
-          </div>
-
+      </div>
         <div>
             
           </div>

@@ -220,3 +220,45 @@ export async function getFriends() {
 
         return data;
 }
+
+
+export async function getFriendSchedules() {
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        throw new Error("User is not logged in.");
+    }
+
+    const { data, error } = await supabase
+        .from("friendships")
+        .select(`
+            friend:profiles!friendships_friend_id_fkey(
+                id,
+                firstname,
+                lastname,
+                username,
+                year,
+                program,
+                schedules(
+                    schedule_id,
+                    subject,
+                    room,
+                    day,
+                    start_time,
+                    end_time,
+                    color
+                )
+            )
+        `)
+        .eq("user_id", user.id)
+        .eq("friend.schedules.is_archived", false);
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}

@@ -57,8 +57,9 @@ function HomeNavBar({isOpen, setIsOpen}) {
                         filter: `id=eq.${user.id}`
                     },
                     (payload) => {
-                        console.log("Realtime fired!");
-                        setProfile(payload.new);
+                      console.log("===== EVENT RECEIVED =====");
+                      console.log(payload);
+
                     }
                 )
                 .subscribe((status) => {
