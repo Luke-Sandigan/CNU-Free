@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from './pages/LandingPage.jsx';
 import SignInPage from './pages/SignInPage.jsx';
-// import VerificationPage from './pages/VerificationPage.jsx';
 import Onboarding from "./pages/Onboarding.jsx";
 import HomePage from './pages/HomePage.jsx';
 import AppLayout from './layouts/app-layout.jsx';
@@ -9,7 +8,8 @@ import './App.css';
 import SharedTracker from "./pages/SharedTracker.jsx";
 import Connection from "./pages/Connection.jsx";
 import AuthCallback from "./pages/AuthCallback.jsx";
-
+// import FriendSchedule from "./pages/FriendSchedule.jsx";
+// import VerificationPage from './pages/VerificationPage.jsx';
 
   
 const router = createBrowserRouter([ 
@@ -43,7 +43,7 @@ const router = createBrowserRouter([
       {
         path: '/Connection',
         element: <Connection/>
-      }
+      },
     ]
 
   }

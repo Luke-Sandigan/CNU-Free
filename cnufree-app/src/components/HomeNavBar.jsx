@@ -59,6 +59,7 @@ function HomeNavBar({isOpen, setIsOpen}) {
                     (payload) => {
                       console.log("===== EVENT RECEIVED =====");
                       console.log(payload);
+                      setProfile(payload.new);
 
                     }
                 )

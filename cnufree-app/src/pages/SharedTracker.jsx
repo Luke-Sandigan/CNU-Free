@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../utils/supabase";
 import SideBar from '../components/SideBar.jsx'
 import HomeNavBar from "../components/HomeNavBar"
@@ -6,28 +7,35 @@ import { Eye } from 'lucide-react';
 import { getFriendSchedules } from "../services/friendService";
 import { getCurrentStatus } from "../services/getCurrentStatus";
 import { formatTime } from "../utils/formatTime";
+import FriendScheduleModal from "../components/FriendScheduleModal.jsx";
 // import OnboardingWrap from "../components/OnboardingWrap.jsx";
 
 
 function SharedTracker() {
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [friends, setFriends] = useState([]);
-  const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-  async function loadFriends() {
 
-      try {
-          setLoading(true);
-          const data = await getFriendSchedules();
-          setFriends(data);
-      } catch (error) {
-          console.error(error);
-      } finally {
-          setLoading(false);
-      }
+    const [isOpen, setIsOpen] = useState(false);
+    const [friends, setFriends] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-  }
+    const [selectedFriendId, setSelectedFriendId] = useState(null);
+    const [scheduleOpen, setScheduleOpen] = useState(false);
+
+    async function loadFriends() {
+
+        try {
+            setLoading(true);
+            const data = await getFriendSchedules();
+            setFriends(data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+
+    }
 
     useEffect(() => {
         loadFriends();
@@ -40,15 +48,11 @@ function SharedTracker() {
                     schema: "public",
                     table: "schedules",
                 },
-                (payload) => {
-                    console.log("EVENT:", payload);
+                () => {
                     loadFriends();
                 }
             )
-            .subscribe((status, err) => {
-                console.log("Status:", status);
-                console.log("Error:", err);
-            });
+            .subscribe();
         return () => {
             supabase.removeChannel(channel);
         };
@@ -56,7 +60,15 @@ function SharedTracker() {
     }, []);
 
   return (
+
     <div className="flex flex-col items-center ">
+
+        <FriendScheduleModal
+            open={scheduleOpen}
+            close={() => setScheduleOpen(false)}
+            friendId={selectedFriendId}
+        />
+
       <SideBar
         open={isOpen}
         close={()=> setIsOpen(false)}
@@ -207,9 +219,13 @@ function SharedTracker() {
                         </div>
 
                         <button
-                            className=" p-2 bg-[#111827] text-white rounded"
+                            onClick={() => {
+                                setSelectedFriendId(friend.friend.id);
+                                setScheduleOpen(true);
+                            }}
+                            className="p-2 bg-[#111827] text-white rounded"
                         >
-                            <Eye size={18} />
+                            <Eye size={18}/>
                         </button>
 
                     </div>

@@ -262,3 +262,61 @@ export async function getFriendSchedules() {
 
     return data;
 }
+
+export async function getFriendSchedule(friendId) {
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        throw new Error("User is not logged in.");
+    }
+
+
+    const { data: friendship, error: friendshipError } = await supabase
+        .from("friendships")
+        .select("friendship_id")
+        .eq("user_id", user.id)
+        .eq("friend_id", friendId)
+        .maybeSingle();
+
+    if (friendshipError) {
+        throw friendshipError;
+    }
+
+    if (!friendship) {
+        throw new Error("Friend not found.");
+    }
+
+    const { data, error } = await supabase
+        .from("profiles")
+        .select(`
+            id,
+            firstname,
+            lastname,
+            username,
+            year,
+            program,
+            school_name,
+            schedules (
+                schedule_id,
+                subject,
+                room,
+                day,
+                start_time,
+                end_time,
+                color,
+                is_archived
+            )
+        `)
+        .eq("id", friendId)
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+
+}

@@ -38,11 +38,46 @@ function ProfileModal({open, close, }) {
 
     }
     
-    useEffect(() => {
+useEffect(() => {
 
-        if (!open) return;
+    if (!open) return;
 
-        loadProfile();
+    loadProfile();
+
+    let channel;
+
+    async function subscribeProfile() {
+
+            const {
+                data: { user }
+            } = await supabase.auth.getUser();
+
+            if (!user) return;
+
+            channel = supabase
+                .channel(`profile-${user.id}`)
+                .on(
+                    "postgres_changes",
+                    {
+                        event: "UPDATE",
+                        schema: "public",
+                        table: "profiles",
+                        filter: `id=eq.${user.id}`
+                    },
+                    () => {
+                        loadProfile();
+                    }
+                )
+                .subscribe();
+        }
+
+        subscribeProfile();
+
+        return () => {
+            if (channel) {
+                supabase.removeChannel(channel);
+            }
+        };
 
     }, [open]);
 
