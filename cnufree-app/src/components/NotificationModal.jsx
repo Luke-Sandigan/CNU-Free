@@ -4,8 +4,10 @@ import {
   acceptFriendRequest,
   rejectFriendRequest,
 } from "../services/friendService";
+import { useToast } from "../context/ToastContext";
 
 function NotificationModal({ open, close }) {
+  const { showToast } = useToast();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -34,20 +36,34 @@ function NotificationModal({ open, close }) {
   async function handleAccept(request) {
     try {
       await acceptFriendRequest(request);
+      showToast({
+        type: "success",
+        message: "Friend request accepted!",
+      });
       await loadRequests();
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      showToast({
+        type: "error",
+        message: error.message,
+      });
     }
   }
 
   async function handleReject(requestId) {
     try {
       await rejectFriendRequest(requestId);
+      showToast({
+        type: "success",
+        message: "Rejected successfully!",
+      });
       await loadRequests();
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      showToast({
+        type: "error",
+        message: error.message,
+      });
     }
   }
 
@@ -96,12 +112,7 @@ function NotificationModal({ open, close }) {
           {requests.map((request) => (
             <div
               key={request.request_id}
-              className="
-                                flex justify-between
-                                rounded-lg
-                                border
-                                p-4
-                            "
+              className=" flex justify-between rounded-lg border p-4"                            
             >
               <div className="flex flex-col ">
                 <h3 className="font-bold">
@@ -115,28 +126,16 @@ function NotificationModal({ open, close }) {
               <div className="flex gap-2">
                 <button
                   onClick={() => handleAccept(request)}
-                  className="
-                                            rounded-lg
-                                            bg-[#111824] hover:bg-slate-600 
-                                            px-4 transition-all duration-300 ease-linear
-                                            py-2
-                                            text-white
-                                            font-bold
-                                        "
+                  className=" rounded-lg bg-[#111824] hover:bg-slate-600 px-4 transition-all duration-300 ease-linear
+                              py-2  text-white  font-bold "
                 >
                   Accept
                 </button>
 
                 <button
                   onClick={() => handleReject(request.request_id)}
-                  className="
-                                            rounded-lg
-                                            bg-red-500 hover:bg-slate-600 
-                                            px-4    transition-all duration-300 ease-linear
-                                            py-2
-                                            text-white
-                                            font-bold
-                                        "
+                  className=" rounded-lg bg-red-500 hover:bg-slate-600 px-4 transition-all duration-300 ease-linear
+                              py-2 text-white font-bold"
                 >
                   Reject
                 </button>
@@ -149,14 +148,14 @@ function NotificationModal({ open, close }) {
           <div className="flex flex-col gap-2 items-center">
             <div
               className="
-                                h-5
-                                w-5
-                                rounded-full
-                                border-4
-                                border-slate-300
-                                border-t-[#111824]
-                                animate-spin
-                            "
+                        h-5
+                        w-5
+                        rounded-full
+                        border-4
+                        border-slate-300
+                        border-t-[#111824]
+                        animate-spin
+                    "
             />
 
             <p className="text-center text-slate-500">Loading...</p>

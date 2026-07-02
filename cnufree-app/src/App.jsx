@@ -8,6 +8,7 @@ import './App.css';
 import SharedTracker from "./pages/SharedTracker.jsx";
 import Connection from "./pages/Connection.jsx";
 import AuthCallback from "./pages/AuthCallback.jsx";
+import { ToastProvider } from "./context/ToastContext";
 // import FriendSchedule from "./pages/FriendSchedule.jsx";
 // import VerificationPage from './pages/VerificationPage.jsx';
 
@@ -53,7 +54,10 @@ function App() {
 
 
   return (
+   <ToastProvider>
     <RouterProvider router={router} />
+   </ToastProvider>
+    
     
   );
 } 

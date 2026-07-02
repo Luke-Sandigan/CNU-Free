@@ -4,8 +4,11 @@ import {
   sendFriendRequest,
   cancelFriendRequest,
 } from "../services/friendService";
+import { useToast } from "../context/ToastContext";
 
 function SearchProfileModal({ open, close }) {
+  const { showToast } = useToast();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -35,11 +38,17 @@ function SearchProfileModal({ open, close }) {
       setProcessingUserId(userId);
 
       await cancelFriendRequest(requestId);
-
+      showToast({
+        type: "success",
+        message: "Cancelled successfully!",
+      });
       await loadUsers();
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      showToast({
+        type: "error",
+        message: error.message,
+      });
     } finally {
       setProcessingUserId(null);
     }
@@ -50,11 +59,18 @@ function SearchProfileModal({ open, close }) {
       setProcessingUserId(receiverId);
 
       await sendFriendRequest(receiverId);
+      showToast({
+        type: "success",
+        message: "Friend request sent!",
+      });
 
       await loadUsers();
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      showToast({
+        type: "error",
+        message: error.message,
+      });
     } finally {
       setProcessingUserId(null);
     }
@@ -158,18 +174,20 @@ function SearchProfileModal({ open, close }) {
                     <p className="text-sm text-slate-500">@{user.username}</p>
                   </div>
 
-                        {user.friendshipStatus === "accepted" ? (
-                        <button
-                            disabled
-                            className="rounded-lg px-4 py-2 font-bold bg-slate-300 text-slate-600 cursor-not-allowed"
-                        >
-                            Friends
-                        </button>
-                        ) : user.friendshipStatus === "pending" ? (
-                        <button
-                            disabled={processingUserId === user.id}
-                            onClick={() => handleCancelRequest(user.requestId, user.id)}
-                            className="
+                  {user.friendshipStatus === "accepted" ? (
+                    <button
+                      disabled
+                      className="rounded-lg px-4 py-2 font-bold bg-slate-300 text-slate-600 cursor-not-allowed"
+                    >
+                      Friends
+                    </button>
+                  ) : user.friendshipStatus === "pending" ? (
+                    <button
+                      disabled={processingUserId === user.id}
+                      onClick={() =>
+                        handleCancelRequest(user.requestId, user.id)
+                      }
+                      className="
                             rounded-lg
                             px-4
                             py-2
@@ -180,14 +198,16 @@ function SearchProfileModal({ open, close }) {
                             disabled:opacity-60
                             disabled:cursor-not-allowed
                             "
-                        >
-                            {processingUserId === user.id ? "Cancelling..." : "Cancel"}
-                        </button>
-                        ) : (
-                        <button
-                            disabled={processingUserId === user.id}
-                            onClick={() => handleAddFriend(user.id)}
-                            className="
+                    >
+                      {processingUserId === user.id
+                        ? "Cancelling..."
+                        : "Cancel"}
+                    </button>
+                  ) : (
+                    <button
+                      disabled={processingUserId === user.id}
+                      onClick={() => handleAddFriend(user.id)}
+                      className="
                             rounded-lg
                             px-4
                             py-2
@@ -198,10 +218,10 @@ function SearchProfileModal({ open, close }) {
                             disabled:opacity-60
                             disabled:cursor-not-allowed
                             "
-                        >
-                            {processingUserId === user.id ? "Sending..." : "Add"}
-                        </button>
-                        )}
+                    >
+                      {processingUserId === user.id ? "Sending..." : "Add"}
+                    </button>
+                  )}
                 </div>
               ))}
           </div>

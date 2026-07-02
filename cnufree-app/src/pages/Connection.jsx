@@ -4,6 +4,7 @@ import { UserRoundPlus } from "lucide-react";
 import ConfirmModal from "../components/ConfirmModal";
 import HomeNavBar from "../components/HomeNavBar";
 import SearchProfileModal from "../components/searchModal";
+import { useToast } from "../context/ToastContext";
 import {
   getFriends,
   getSentFriendRequests,
@@ -15,6 +16,8 @@ import {
 } from "../services/friendService";
 
 function Connection() {
+  const { showToast } = useToast();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isActive, setIsActive] = useState("friends");
   const [showMenu, setShowMenu] = useState(false);
@@ -33,22 +36,31 @@ function Connection() {
   const [selectedFriend, setSelectedFriend] = useState(null);
 
   const [processingRequest, setProcessingRequest] = useState({
-        id: null,
-        action: null,
+    id: null,
+    action: null,
   });
-    const [processingFriendId, setProcessingFriendId] = useState(null);
+  const [processingFriendId, setProcessingFriendId] = useState(null);
 
   async function handleUnfriend() {
     if (!selectedFriend) return;
     try {
       setProcessingFriendId(selectedFriend.friend.id);
       await unfriend(selectedFriend.friend.id);
+
+      showToast({
+        type: "success",
+        message: "Friend removed successfully.",
+      });
+
       setShowUnfriendModal(false);
       setSelectedFriend(null);
       await loadFriends();
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      showToast({
+        type: "error",
+        message: error.message,
+      });
     }
   }
 
@@ -57,52 +69,86 @@ function Connection() {
       setProcessingRequest({
         id: request.request_id,
         action: "accept",
-    });
+      });
       await acceptFriendRequest(request);
+
+      showToast({
+        type: "success",
+        message: "Friend request accepted.",
+      });
       await Promise.all([loadPendingRequests(), loadFriends()]);
     } catch (error) {
       console.error(error);
+      showToast({
+        type: "error",
+        message: error.message,
+      });
     } finally {
-        setProcessingRequest({
-            id: null,
-            action: null,
-        });
+      setProcessingRequest({
+        id: null,
+        action: null,
+      });
     }
   }
 
   async function handleRejectRequest(requestId) {
     try {
-        setProcessingRequest({
-            id: requestId,
-            action: "reject",
-        });
+      setProcessingRequest({
+        id: requestId,
+        action: "reject",
+      });
       await rejectFriendRequest(requestId);
+      showToast({
+        type: "success",
+        message: "Friend request rejected.",
+      });
       await loadPendingRequests();
     } catch (error) {
-        setProcessingRequest({
-            id: null,
-            action: null,
-        });
+      showToast({
+        type: "error",
+        message: error.message,
+      });
+      setProcessingRequest({
+        id: null,
+        action: null,
+      });
       console.error(error);
     } finally {
-        setProcessingRequest({ id: null, action: null });
+      setProcessingRequest({ id: null, action: null });
     }
   }
 
-  const loadFriends =  useCallback(async () => {
-        try {
-        setFriendsLoading(true);
-        const data = await getFriends();
-        setFriends(data);
-        } catch (error) {
-        console.error(error);
-        alert(error.message);
-        } finally {
-        setFriendsLoading(false);
-        }
-    }, [])
+  const loadFriends = useCallback(async () => {
+    try {
+      setFriendsLoading(true);
+      const data = await getFriends();
+      setFriends(data);
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    } finally {
+      setFriendsLoading(false);
+    }
+  }, []);
 
-  const  loadSentRequests  =  useCallback(async () =>  {
+   async function handleCancelRequest(requestId) {
+    try {
+      await cancelFriendRequest(requestId);
+      showToast({
+        type: "success",
+        message: "Friend request cancelled.",
+      });
+      await loadSentRequests();
+    } catch (error) {
+      console.error(error);
+      showToast({
+        type: "error",
+        message: error.message,
+      });
+    }
+  }
+
+  const loadSentRequests = useCallback(async () => {
     try {
       setSentLoading(true);
       const data = await getSentFriendRequests();
@@ -112,9 +158,9 @@ function Connection() {
     } finally {
       setSentLoading(false);
     }
-  }, [])
+  }, []);
 
-  const loadPendingRequests = useCallback ( async  () => {
+  const loadPendingRequests = useCallback(async () => {
     try {
       setRequestsLoading(true);
       const data = await getPendingFriendRequests();
@@ -124,16 +170,8 @@ function Connection() {
     } finally {
       setRequestsLoading(false);
     }
-  }, [])
+  }, []);
 
-  async function handleCancelRequest(requestId) {
-    try {
-      await cancelFriendRequest(requestId);
-      await loadSentRequests();
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   useEffect(() => {
     loadFriends();
@@ -142,12 +180,11 @@ function Connection() {
   }, []);
 
   useEffect(() => {
-        const reload = () => {
-            loadFriends();
-            loadPendingRequests();
-            loadSentRequests();
-        };
-    
+    const reload = () => {
+      loadFriends();
+      loadPendingRequests();
+      loadSentRequests();
+    };
 
     const channel = supabase
       .channel("friend-updates")
@@ -455,9 +492,9 @@ function Connection() {
                             "
                       >
                         {processingRequest.id === request.request_id &&
-                         processingRequest.action === "accept"
-                            ? "Accepting..."
-                            : "Accept"}
+                        processingRequest.action === "accept"
+                          ? "Accepting..."
+                          : "Accept"}
                       </button>
 
                       <button
@@ -466,10 +503,10 @@ function Connection() {
                         className="w-full bg-[#EF4444] font-extrabold text-white py-2 
                                    rounded-xl hover:bg-[#e06161] transition-all duration-300 ease-linear"
                       >
-                       {processingRequest.id === request.request_id &&
-                            processingRequest.action === "reject"
-                                ? "Rejecting..."
-                                : "Reject"}
+                        {processingRequest.id === request.request_id &&
+                        processingRequest.action === "reject"
+                          ? "Rejecting..."
+                          : "Reject"}
                       </button>
                     </div>
                   </div>
