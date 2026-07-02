@@ -136,7 +136,7 @@ function HomeNavBar({isOpen, setIsOpen}) {
             </div>
           </div>
 
-            <div className="flex items-center justify-center w-1/2 md:w-100 mr-11 md:mr-0">
+            <div className="flex items-center justify-center w-1/2 md:w-100  md:mr-0">
 
               <Search
                   size={18}
@@ -146,7 +146,7 @@ function HomeNavBar({isOpen, setIsOpen}) {
               <input 
               className=" p-2 px-4 pl-10 w-full border text-gray-900 text-[15px] p- border-slate-200 rounded-full"
               type="text"
-              placeholder="Search folders, tasks, or connected peers..."
+              placeholder="Search a friend..."
               />
   
             </div>

@@ -69,7 +69,6 @@ export async function searchUser(username) {
         );
 
         return {
-
             ...profile,
 
             friendshipStatus: friendship
@@ -78,6 +77,7 @@ export async function searchUser(username) {
                     ? request.status
                     : "none",
 
+            requestId: request?.request_id ?? null,
         };
 
     });
@@ -94,17 +94,96 @@ export async function sendFriendRequest(receiverId) {
         throw new Error("User is not logged in.");
     }
 
-    const { error } = await supabase
+    // Check if an old request already exists (for guide lang)
+    const { data: existingRequest, error: fetchError } = await supabase
         .from("friend_requests")
-        .insert({
-            sender_id: user.id,
-            receiver_id: receiverId,
-            status: "pending",
-        });
+        .select("request_id")
+        .or(
+            `and(sender_id.eq.${user.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${user.id})`
+        )
+        .maybeSingle();
+
+    if (fetchError) {
+        throw fetchError;
+    }
+
+    if (existingRequest) {
+
+        // Reuse old request (for guide lang)
+        const { error } = await supabase
+            .from("friend_requests")
+            .update({
+                sender_id: user.id,
+                receiver_id: receiverId,
+                status: "pending",
+            })
+            .eq("request_id", existingRequest.request_id);
+
+        if (error) throw error;
+
+    } else {
+
+        // No request exists
+        const { error } = await supabase
+            .from("friend_requests")
+            .insert({
+                sender_id: user.id,
+                receiver_id: receiverId,
+                status: "pending",
+            });
+
+        if (error) throw error;
+    }
+}
+
+export async function getSentFriendRequests() {
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        throw new Error("User is not logged in.");
+    }
+
+    const { data, error } = await supabase
+        .from("friend_requests")
+        .select(`
+            request_id,
+            sender_id,
+            receiver_id,
+            status,
+            receiver:profiles!friend_requests_receiver_id_fkey(
+                id,
+                firstname,
+                lastname,
+                username,
+                year,
+                program
+            )
+        `)
+        .eq("sender_id", user.id)
+        .eq("status", "pending");
 
     if (error) {
         throw error;
     }
+
+    return data;
+
+}
+
+export async function cancelFriendRequest(requestId) {
+
+    const { error } = await supabase
+        .from("friend_requests")
+        .delete()
+        .eq("request_id", requestId);
+
+    if (error) {
+        throw error;
+    }
+
 }
 
 export async function getPendingFriendRequests() {
@@ -221,6 +300,39 @@ export async function getFriends() {
         return data;
 }
 
+export async function unfriend(friendId) {
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        throw new Error("User is not logged in.");
+    }
+
+    const { error: friendshipError } = await supabase
+        .from("friendships")
+        .delete()
+        .or(
+            `and(user_id.eq.${user.id},friend_id.eq.${friendId}),and(user_id.eq.${friendId},friend_id.eq.${user.id})`
+        );
+
+    if (friendshipError) {
+        throw friendshipError;
+    }
+
+    const { error: requestError } = await supabase
+        .from("friend_requests")
+        .delete()
+        .or(
+            `and(sender_id.eq.${user.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${user.id})`
+        );
+
+    if (requestError) {
+        throw requestError;
+    }
+}
+
 
 export async function getFriendSchedules() {
 
@@ -320,3 +432,5 @@ export async function getFriendSchedule(friendId) {
     return data;
 
 }
+
+

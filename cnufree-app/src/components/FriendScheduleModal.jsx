@@ -42,8 +42,7 @@ function FriendScheduleModal({ open, close, friendId }) {
     if (!open) return null;
 
     const todaySchedules =
-        friend?.schedules
-            ?.filter((schedule) => schedule.day === selectedDay && !schedule.is_archived)
+        friend?.schedules?.filter((schedule) => schedule.day === selectedDay && !schedule.is_archived)
             .sort((a, b) => a.start_time.localeCompare(b.start_time)) || [];
 
     return (

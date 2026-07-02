@@ -1,77 +1,63 @@
 import { useEffect, useState, useCallback } from "react";
-import { getPendingFriendRequests, acceptFriendRequest, rejectFriendRequest } from "../services/friendService";
+import {
+  getPendingFriendRequests,
+  acceptFriendRequest,
+  rejectFriendRequest,
+} from "../services/friendService";
 
 function NotificationModal({ open, close }) {
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-    const [requests, setRequests] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-
-    const loadRequests = useCallback(async () => {
-
-        if (!open) {
-            return;
-        }
-
-        try {
-
-            setLoading(true);
-
-            const data = await getPendingFriendRequests();
-
-            setRequests(data);
-
-        }
-
-        catch (error) {
-            console.error(error);
-        }  finally {
-            setLoading(false);
-        }
-
-    }, [open]);
-
-        useEffect(() => {
-            loadRequests();
-        }, [loadRequests]);
-
-    async function handleAccept(request) {
-
-        try {
-            await acceptFriendRequest(request);
-            await loadRequests();
-        }
-
-        catch (error) {
-            console.error(error);
-            alert(error.message);
-        }
-
+  const loadRequests = useCallback(async () => {
+    if (!open) {
+      return;
     }
 
-    async function handleReject(requestId) {
+    try {
+      setLoading(true);
 
-        try {
-            await rejectFriendRequest(requestId);
-            await loadRequests();
-        }
+      const data = await getPendingFriendRequests();
 
-        catch (error) {
-
-            console.error(error);
-            alert(error.message);
-
-        }
-
+      setRequests(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
+  }, [open]);
 
+  useEffect(() => {
+    loadRequests();
+  }, [loadRequests]);
 
-    if (!open) { return null; }
+  async function handleAccept(request) {
+    try {
+      await acceptFriendRequest(request);
+      await loadRequests();
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  }
 
-    return (
+  async function handleReject(requestId) {
+    try {
+      await rejectFriendRequest(requestId);
+      await loadRequests();
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  }
 
-        <div
-            className="
+  if (!open) {
+    return null;
+  }
+
+  return (
+    <div
+      className="
                 fixed
                 inset-0
                 bg-black/40
@@ -80,11 +66,10 @@ function NotificationModal({ open, close }) {
                 items-center
                 justify-center
             "
-             onClick={close}
-        >
-
-            <div
-                className="
+      onClick={close}
+    >
+      <div
+        className="
                     bg-white
                     w-[95%]
                     max-w-md
@@ -92,69 +77,45 @@ function NotificationModal({ open, close }) {
                     shadow-lg
                     p-5
                 "
-            >
+      >
+        <div className="flex justify-between items-center mb-5">
+          <h2 className="text-xl font-extrabold">Notifications</h2>
 
-                <div className="flex justify-between items-center mb-5">
+          <button onClick={close} className="font-bold">
+            ✕
+          </button>
+        </div>
 
-                    <h2 className="text-xl font-extrabold">
-                        Notifications
-                    </h2>
+        {!loading && requests.length === 0 && (
+          <p className="text-center text-slate-500">
+            No pending friend requests.
+          </p>
+        )}
 
-                    <button
-                        onClick={close}
-                        className="font-bold"
-                    >
-                        ✕
-                    </button>
-
-                </div>
-
-
-
-                {!loading &&
-                    requests.length === 0 && (
-
-                    <p className="text-center text-slate-500">
-
-                        No pending friend requests.
-
-                    </p>
-
-                )}
-
-                <div className="space-y-3">
-
-                    {requests.map((request) => (
-
-                        <div
-                            key={request.request_id}
-                            className="
+        <div className="space-y-3">
+          {requests.map((request) => (
+            <div
+              key={request.request_id}
+              className="
                                 flex justify-between
                                 rounded-lg
                                 border
                                 p-4
                             "
-                        >
-                        <div className="flex flex-col ">
-                            <h3 className="font-bold">
+            >
+              <div className="flex flex-col ">
+                <h3 className="font-bold">
+                  {request.sender.firstname} {request.sender.lastname}
+                </h3>
 
-                                {request.sender.firstname}{" "}
-                                {request.sender.lastname}
-
-                            </h3>
-
-                            <p className="text-sm text-slate-500">
-
-                                @{request.sender.username}
-
-                            </p>
-
-                        </div>
-                                <div className="flex gap-2">
-
-                                    <button
-                                        onClick={() => handleAccept(request)}
-                                        className="
+                <p className="text-sm text-slate-500">
+                  @{request.sender.username}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleAccept(request)}
+                  className="
                                             rounded-lg
                                             bg-[#111824] hover:bg-slate-600 
                                             px-4 transition-all duration-300 ease-linear
@@ -162,13 +123,13 @@ function NotificationModal({ open, close }) {
                                             text-white
                                             font-bold
                                         "
-                                    >
-                                        Accept
-                                    </button>
+                >
+                  Accept
+                </button>
 
-                                    <button
-                                        onClick={() => handleReject(request.request_id)}
-                                        className="
+                <button
+                  onClick={() => handleReject(request.request_id)}
+                  className="
                                             rounded-lg
                                             bg-red-500 hover:bg-slate-600 
                                             px-4    transition-all duration-300 ease-linear
@@ -176,22 +137,18 @@ function NotificationModal({ open, close }) {
                                             text-white
                                             font-bold
                                         "
-                                    >
-                                        Reject
-                                    </button>
+                >
+                  Reject
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
 
-                                </div>
-
-                        </div>
-
-                    ))}
-
-                </div>
-
-                {loading && (
-                    <div className="flex flex-col gap-2 items-center">
-                        <div
-                            className="
+        {loading && (
+          <div className="flex flex-col gap-2 items-center">
+            <div
+              className="
                                 h-5
                                 w-5
                                 rounded-full
@@ -200,20 +157,14 @@ function NotificationModal({ open, close }) {
                                 border-t-[#111824]
                                 animate-spin
                             "
-                        />
-                    
-                        <p className="text-center text-slate-500">
-                            Loading...
-                        </p>
-                    </div>
-                )}
-                
-            </div>
+            />
 
-        </div>
-
-    );
-
+            <p className="text-center text-slate-500">Loading...</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default NotificationModal;
