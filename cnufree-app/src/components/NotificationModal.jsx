@@ -112,26 +112,24 @@ function NotificationModal({ open, close }) {
           {requests.map((request) => (
             <div
               key={request.request_id}
-              className=" flex justify-between rounded-lg border p-4"                            
+              className="flex justify-between items-center gap-3 rounded-lg border p-4"
             >
-              <div className="flex flex-col ">
-                <h3 className="font-bold">
+              <div className="flex flex-col min-w-0 flex-1">
+                <h3
+                  className="font-bold truncate"
+                  title={`${request.sender.firstname} ${request.sender.lastname}`}
+                >
                   {request.sender.firstname} {request.sender.lastname}
                 </h3>
 
-                <p className="text-sm text-slate-500">
+                <p
+                  className="text-sm text-slate-500 truncate"
+                  title={`@${request.sender.username}`}
+                >
                   @{request.sender.username}
                 </p>
               </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleAccept(request)}
-                  className=" rounded-lg bg-[#111824] hover:bg-slate-600 px-4 transition-all duration-300 ease-linear
-                              py-2  text-white  font-bold "
-                >
-                  Accept
-                </button>
-
+              <div className="flex gap-2 shrink-0">
                 <button
                   onClick={() => handleReject(request.request_id)}
                   className=" rounded-lg bg-red-500 hover:bg-slate-600 px-4 transition-all duration-300 ease-linear
@@ -139,13 +137,21 @@ function NotificationModal({ open, close }) {
                 >
                   Reject
                 </button>
+
+                <button
+                  onClick={() => handleAccept(request)}
+                  className=" rounded-lg bg-[#111824] hover:bg-slate-600 px-4 transition-all duration-300 ease-linear
+                              py-2  text-white  font-bold "
+                >
+                  Accept
+                </button>
               </div>
             </div>
           ))}
         </div>
 
         {loading && (
-          <div className="flex flex-col gap-2 items-center">
+          <div className="flex flex-col gap-2 items-center mt-6">
             <div
               className="
                         h-5

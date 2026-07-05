@@ -27,31 +27,17 @@ function Toast({ message, type }) {
     };
 
     const icons = {
-        success: <CheckCircle size={20} />,
-        error: <XCircle size={20} />,
-        warning: <AlertTriangle size={20} />,
-        info: <Info size={20} />,
+        success: <CheckCircle size={20} className="shrink-0" />,
+        error: <XCircle size={20} className="shrink-0" />,
+        warning: <AlertTriangle size={20} className="shrink-0" />,
+        info: <Info size={20} className="shrink-0" />,
     };
 
     return (
         <div
-            className={`
-                fixed
-                top-5
-                left-1/2
-                -translate-x-1/2
-                z-[99999]
-                text-white
-                px-5
-                py-3
-                rounded-xl
-                shadow-xl
-                flex
-                items-center
-                gap-3
-                font-bold
-                transition-all
-                duration-300
+            className={` fixed top-[max(1.25rem,env(safe-area-inset-top))] left-1/2 -translate-x-1/2 z-[99999] w-fit
+                          max-w-[calc(100%-2rem)] text-white px-4 py-3 sm:px-5 rounded-xl shadow-xl flex items-center gap-3 font-bold text-sm
+                          sm:text-base transition-all duration-300
                 ${colors[type]}
                 ${
                     visible
@@ -62,7 +48,9 @@ function Toast({ message, type }) {
         >
             {icons[type]}
 
-            <span>{message}</span>
+            <span className="whitespace-nowrap overflow-hidden text-ellipsis">
+                {message}
+            </span>
         </div>
     );
 }

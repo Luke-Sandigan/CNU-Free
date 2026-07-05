@@ -11,7 +11,7 @@ import FriendScheduleModal from "../components/FriendScheduleModal.jsx";
 // import OnboardingWrap from "../components/OnboardingWrap.jsx";
 
 function SharedTracker() {
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
   const [friends, setFriends] = useState([]);
@@ -64,35 +64,34 @@ function SharedTracker() {
       <SideBar open={isOpen} close={() => setIsOpen(false)} />
       <HomeNavBar isOpen={isOpen} setIsOpen={setIsOpen} />
 
-      <div className="flex flex-col max-w-lg w-full mt-15">
-        <div className="flex justify-between items-center  px-5 py-5 bg-[#111827] ">
+      <div className="flex flex-col max-w-lg w-full mt-15 h-[calc(100vh-60px)]">
+        {/* fixed header — no scroll */}
+        <div className="flex justify-between items-center px-5 py-5 bg-[#111827] shrink-0">
           <div className="flex flex-col">
             <h1 className="font-extrabold text-xl sm:text-4xl text-white">
-              {" "}
-              Friend's Tracker{" "}
+              Friend's Tracker
             </h1>
             <p className="text-md text-slate-400">
-              {" "}
-              Find out which friend is free!{" "}
+              Find out which friend is free!
             </p>
           </div>
-
           <div>
             <Eye className="size-20 text-white" />
           </div>
         </div>
 
-        <div className="w-full border-none sm:border p-4 rounded-2xl border-slate-300">
-          <div className="flex flex-col mb-5 ">
-            <h1 className="font-extrabold text-md"> Friends </h1>
+        {/* scrollable section */}
+        <div className="flex flex-col flex-1 overflow-hidden border-none sm:border rounded-2xl border-slate-300">
+          {/* sticky label — doesn't scroll */}
+          <div className="flex flex-col px-4 pt-4 pb-3 shrink-0">
+            <h1 className="font-extrabold text-md">Friends</h1>
             <p className="sm:text-sm text-slate-500 flex items-center gap-1 text-[13px]">
-              {" "}
               See your friend's schedule by pressing the "{" "}
-              <Eye className="size-4" /> " button.{" "}
+              <Eye className="size-4" /> " button.
             </p>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 overflow-y-auto px-4 pb-4">
             {loading && (
               <div className="flex flex-col items-center justify-center gap-3 ">
                 <div
@@ -135,19 +134,19 @@ function SharedTracker() {
                                 `}
                       />
 
-                      <div className=" flex flex-col w-[120px] ">
-                        <h1 className="font-extrabold">
+                      <div className=" flex flex-col max-w-[90px] sm:max-w-[120px] min-w-0">
+                        <h1 className="font-extrabold truncate">
                           {friend.friend.firstname}
                         </h1>
 
-                        <p className=" text-xs text-slate-500">
+                        <p className=" text-xs text-slate-500 ">
                           @{friend.friend.username}
                         </p>
                       </div>
                     </div>
 
                     <div
-                      className={` border rounded-lg px-3 py-2
+                      className={` shrink-0 border rounded-lg px-3 py-2
                                 ${
                                   status.status === "Busy"
                                     ? "bg-red-100 border-red-400"
@@ -193,7 +192,7 @@ function SharedTracker() {
                         setSelectedFriendId(friend.friend.id);
                         setScheduleOpen(true);
                       }}
-                      className="p-2 bg-[#111827] text-white rounded"
+                      className="p-2 bg-[#111827] text-white rounded shrink-0 "
                     >
                       <Eye size={18} />
                     </button>

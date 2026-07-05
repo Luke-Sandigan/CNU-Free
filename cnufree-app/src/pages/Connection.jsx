@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../utils/supabase";
-import { UserRoundPlus } from "lucide-react";
+import { UserRoundPlus, ChevronDown } from "lucide-react";
 import ConfirmModal from "../components/ConfirmModal";
 import HomeNavBar from "../components/HomeNavBar";
 import SearchProfileModal from "../components/searchModal";
@@ -14,6 +14,15 @@ import {
   rejectFriendRequest,
   unfriend,
 } from "../services/friendService";
+
+const NAME_MAX = 20;
+const PROGRAM_MAX = 50;
+
+function truncateText(text, max) {
+  if (!text) return "";
+  const str = String(text);
+  return str.length > max ? `${str.slice(0, max).trimEnd()}…` : str;
+}
 
 function Connection() {
   const { showToast } = useToast();
@@ -131,7 +140,7 @@ function Connection() {
     }
   }, []);
 
-   async function handleCancelRequest(requestId) {
+  async function handleCancelRequest(requestId) {
     try {
       await cancelFriendRequest(requestId);
       showToast({
@@ -171,7 +180,6 @@ function Connection() {
       setRequestsLoading(false);
     }
   }, []);
-
 
   useEffect(() => {
     loadFriends();
@@ -245,9 +253,18 @@ function Connection() {
                 
                 "
               >
-                {isActive === "friends" && "Friends"}
-                {isActive === "friendReq" && "Friend Requests"}
-                {isActive === "PendingReq" && "Pending Requests"}
+                <span>
+                  {isActive === "friends" && "Friends"}
+                  {isActive === "friendReq" && "Friend Requests"}
+                  {isActive === "PendingReq" && "Pending Requests"}
+                </span>
+
+                <ChevronDown
+                  size={18}
+                  className={`text-[#111824] transition-transform duration-200 ${
+                    showMenu ? "rotate-180" : "rotate-0"
+                  }`}
+                />
               </button>
 
               <div
@@ -344,13 +361,26 @@ function Connection() {
             </div>
           ) : (
             <div className="flex flex-wrap w-full gap-4 sm:gap-5 items-center justify-center sm:items-start sm:justify-start">
-              {friends.map((friend) => (
-                <div
-                  key={friend.friend.id}
-                  className="flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-sm flex flex-col rounded-xl items-center justify-center p-5"
-                >
+              {friends.map((friend) => {
+                const fullName = `${friend.friend.firstname} ${friend.friend.lastname}`;
+                const displayName = truncateText(fullName, NAME_MAX);
+                const yearProgram = `${friend.friend.year} - ${friend.friend.program}`;
+                const displayYearProgram = truncateText(
+                  yearProgram,
+                  PROGRAM_MAX,
+                );
+                const displayUsername = truncateText(
+                  friend.friend.username,
+                  NAME_MAX,
+                );
+
+                return (
                   <div
-                    className="
+                    key={friend.friend.id}
+                    className="flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-full sm:w-sm flex flex-col rounded-xl items-center justify-center p-5 min-w-0"
+                  >
+                    <div
+                      className="
                             hover:bg-[#111827be]
                             hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]
                             flex
@@ -366,40 +396,49 @@ function Connection() {
                             duration-300
                             ease-in-out
                         "
-                  >
-                    {friend.friend.firstname.charAt(0)}
-                    {friend.friend.lastname.charAt(0)}
-                  </div>
+                    >
+                      {friend.friend.firstname.charAt(0)}
+                      {friend.friend.lastname.charAt(0)}
+                    </div>
 
-                  <div className="font-extrabold text-md">
-                    {friend.friend.firstname} {friend.friend.lastname}
-                    <span className="font-light"> • </span>
-                    <span className="font-light text-sm">
-                      {friend.friend.year} - {friend.friend.program}
-                    </span>
-                  </div>
+                    <div
+                      className="font-extrabold text-md w-full text-center min-w-0"
+                      title={`${fullName} • ${yearProgram}`}
+                    >
+                      <span className="truncate inline-block max-w-full align-bottom">
+                        {displayName}
+                      </span>
+                      <span className="font-light"> • </span>
+                      <span className="font-light text-sm truncate inline-block max-w-full align-bottom">
+                        {displayYearProgram}
+                      </span>
+                    </div>
 
-                  <div className="font-extrabold text-[12px] text-slate-600 mb-3">
-                    @{friend.friend.username}
-                  </div>
+                    <div
+                      className="font-extrabold text-[12px] text-slate-600 mb-3 max-w-full truncate px-2"
+                      title={`@${friend.friend.username}`}
+                    >
+                      @{displayUsername}
+                    </div>
 
-                  <div className="font-extrabold text-sm bg-[#E1F6EF] rounded-xl px-3 py-2 text-[#10B981] mb-8">
-                    Connected
-                  </div>
+                    <div className="font-extrabold text-sm bg-[#E1F6EF] rounded-xl px-3 py-2 text-[#10B981] mb-8">
+                      Connected
+                    </div>
 
-                  <button
-                    onClick={() => {
-                      setSelectedFriend(friend);
-                      setShowUnfriendModal(true);
-                    }}
-                    className="w-full bg-[#EF4444] font-extrabold hover:bg-[#e06161] 
+                    <button
+                      onClick={() => {
+                        setSelectedFriend(friend);
+                        setShowUnfriendModal(true);
+                      }}
+                      className="w-full bg-[#EF4444] font-extrabold hover:bg-[#e06161] 
                                transition-all duration-300 ease-linear hover:text-[#e9c5c5] 
                              text-[#111824] py-2 rounded-xl"
-                  >
-                    Unfriend
-                  </button>
-                </div>
-              ))}
+                    >
+                      Unfriend
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           ))}
         {isActive === "friendReq" &&
@@ -430,13 +469,26 @@ function Connection() {
                   No friend requests.
                 </div>
               ) : (
-                pendingRequests.map((request) => (
-                  <div
-                    key={request.request_id}
-                    className="flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-full sm:w-sm flex flex-col rounded-xl items-center justify-center p-5"
-                  >
+                pendingRequests.map((request) => {
+                  const fullName = `${request.sender.firstname} ${request.sender.lastname}`;
+                  const displayName = truncateText(fullName, NAME_MAX);
+                  const yearProgram = `${request.sender.year} - ${request.sender.program}`;
+                  const displayYearProgram = truncateText(
+                    yearProgram,
+                    PROGRAM_MAX,
+                  );
+                  const displayUsername = truncateText(
+                    request.sender.username,
+                    NAME_MAX,
+                  );
+
+                  return (
                     <div
-                      className="
+                      key={request.request_id}
+                      className="flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-full sm:w-sm flex flex-col rounded-xl items-center justify-center p-5 min-w-0"
+                    >
+                      <div
+                        className="
                         hover:bg-[#111827be]
                         hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]
                         hover:scale-105
@@ -455,32 +507,40 @@ function Connection() {
                         flex
                         ease-in-out
                     "
-                    >
-                      {request.sender.firstname.charAt(0)}
-                      {request.sender.lastname.charAt(0)}
-                    </div>
+                      >
+                        {request.sender.firstname.charAt(0)}
+                        {request.sender.lastname.charAt(0)}
+                      </div>
 
-                    <div className="font-extrabold text-md text-center">
-                      {request.sender.firstname} {request.sender.lastname}
-                      {" • "}
-                      <span className="font-light text-sm">
-                        {request.sender.year} - {request.sender.program}
-                      </span>
-                    </div>
+                      <div
+                        className="font-extrabold text-md text-center w-full min-w-0"
+                        title={`${fullName} • ${yearProgram}`}
+                      >
+                        <span className="truncate inline-block max-w-full align-bottom">
+                          {displayName}
+                        </span>
+                        {" • "}
+                        <span className="font-light text-sm truncate inline-block max-w-full align-bottom">
+                          {displayYearProgram}
+                        </span>
+                      </div>
 
-                    <div className="font-extrabold text-[12px] text-slate-600 mb-3">
-                      @{request.sender.username}
-                    </div>
+                      <div
+                        className="font-extrabold text-[12px] text-slate-600 mb-3 max-w-full truncate px-2"
+                        title={`@${request.sender.username}`}
+                      >
+                        @{displayUsername}
+                      </div>
 
-                    <div className="font-extrabold text-sm bg-slate-100 rounded-xl px-3 py-2 text-slate-800 mb-8">
-                      wants to connect with you..
-                    </div>
+                      <div className="font-extrabold text-sm bg-slate-100 rounded-xl px-3 py-2 text-slate-800 mb-8">
+                        wants to connect with you..
+                      </div>
 
-                    <div className="flex gap-2 w-full">
-                      <button
-                        disabled={processingRequest.id === request.request_id}
-                        onClick={() => handleAcceptRequest(request)}
-                        className="
+                      <div className="flex gap-2 w-full">
+                        <button
+                          disabled={processingRequest.id === request.request_id}
+                          onClick={() => handleAcceptRequest(request)}
+                          className="
                                 w-full
                                 bg-[#111824]
                                 font-extrabold
@@ -490,27 +550,30 @@ function Connection() {
                                 disabled:opacity-50
                                 disabled:cursor-not-allowed
                             "
-                      >
-                        {processingRequest.id === request.request_id &&
-                        processingRequest.action === "accept"
-                          ? "Accepting..."
-                          : "Accept"}
-                      </button>
+                        >
+                          {processingRequest.id === request.request_id &&
+                          processingRequest.action === "accept"
+                            ? "Accepting..."
+                            : "Accept"}
+                        </button>
 
-                      <button
-                        disabled={processingRequest.id === request.request_id}
-                        onClick={() => handleRejectRequest(request.request_id)}
-                        className="w-full bg-[#EF4444] font-extrabold text-white py-2 
+                        <button
+                          disabled={processingRequest.id === request.request_id}
+                          onClick={() =>
+                            handleRejectRequest(request.request_id)
+                          }
+                          className="w-full bg-[#EF4444] font-extrabold text-white py-2 
                                    rounded-xl hover:bg-[#e06161] transition-all duration-300 ease-linear"
-                      >
-                        {processingRequest.id === request.request_id &&
-                        processingRequest.action === "reject"
-                          ? "Rejecting..."
-                          : "Reject"}
-                      </button>
+                        >
+                          {processingRequest.id === request.request_id &&
+                          processingRequest.action === "reject"
+                            ? "Rejecting..."
+                            : "Reject"}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           ))}
@@ -543,13 +606,26 @@ function Connection() {
                   No pending requests.
                 </div>
               ) : (
-                sentRequests.map((request) => (
-                  <div
-                    key={request.request_id}
-                    className="flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-full sm:w-sm flex flex-col rounded-xl items-center justify-center p-5"
-                  >
+                sentRequests.map((request) => {
+                  const fullName = `${request.receiver.firstname} ${request.receiver.lastname}`;
+                  const displayName = truncateText(fullName, NAME_MAX);
+                  const yearProgram = `${request.receiver.year} - ${request.receiver.program}`;
+                  const displayYearProgram = truncateText(
+                    yearProgram,
+                    PROGRAM_MAX,
+                  );
+                  const displayUsername = truncateText(
+                    request.receiver.username,
+                    NAME_MAX,
+                  );
+
+                  return (
                     <div
-                      className="
+                      key={request.request_id}
+                      className="flex-[1_1_auto] sm:flex-[0_0_auto] border border-slate-300 w-full sm:w-sm flex flex-col rounded-xl items-center justify-center p-5 min-w-0"
+                    >
+                      <div
+                        className="
                                   hover:bg-[#111827be]
                                   hover:shadow-[0_0_30px_rgba(168,85,247,0.8)]
                                   hover:scale-105 text-xl text-white items-center
@@ -557,34 +633,44 @@ function Connection() {
                                   mb-2 bg-slate-400 h-16 w-16 justify-center
                                   duration-300  flex ease-in-out
                               "
-                    >
-                      {request.receiver.firstname.charAt(0)}
-                      {request.receiver.lastname.charAt(0)}
-                    </div>
+                      >
+                        {request.receiver.firstname.charAt(0)}
+                        {request.receiver.lastname.charAt(0)}
+                      </div>
 
-                    <div className="font-extrabold text-md text-center">
-                      {request.receiver.firstname} {request.receiver.lastname} •{" "}
-                      <span className="font-light text-sm">
-                        {request.receiver.year} - {request.receiver.program}
-                      </span>
-                    </div>
+                      <div
+                        className="font-extrabold text-md text-center w-full min-w-0"
+                        title={`${fullName} • ${yearProgram}`}
+                      >
+                        <span className="truncate inline-block max-w-full align-bottom">
+                          {displayName}
+                        </span>{" "}
+                        •{" "}
+                        <span className="font-light text-sm truncate inline-block max-w-full align-bottom">
+                          {displayYearProgram}
+                        </span>
+                      </div>
 
-                    <div className="font-extrabold text-[12px] text-slate-600 mb-3">
-                      @{request.receiver.username}
-                    </div>
+                      <div
+                        className="font-extrabold text-[12px] text-slate-600 mb-3 max-w-full truncate px-2"
+                        title={`@${request.receiver.username}`}
+                      >
+                        @{displayUsername}
+                      </div>
 
-                    <div className="font-extrabold text-sm bg-slate-100 rounded-xl px-3 py-2 text-slate-800 mb-8">
-                      Pending
-                    </div>
+                      <div className="font-extrabold text-sm bg-slate-100 rounded-xl px-3 py-2 text-slate-800 mb-8">
+                        Pending
+                      </div>
 
-                    <button
-                      className="w-full bg-slate-600 hover:bg-red-600 transition-colors font-extrabold text-white py-2 rounded-xl"
-                      onClick={() => handleCancelRequest(request.request_id)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ))
+                      <button
+                        className="w-full bg-slate-600 hover:bg-red-600 transition-colors font-extrabold text-white py-2 rounded-xl"
+                        onClick={() => handleCancelRequest(request.request_id)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  );
+                })
               )}
             </div>
           ))}

@@ -25,7 +25,7 @@ function AuthCallback() {
                     .from("profiles")
                     .select("*")
                     .eq("id", user.id)
-                    .maybeSingle();
+                    .single();
 
             if (profileError) {
                 console.error(profileError);
@@ -40,7 +40,7 @@ function AuthCallback() {
             }
         };
 
-        // Listen for auth events
+
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (_event, session) => {
                 if (session) {
@@ -49,7 +49,7 @@ function AuthCallback() {
             }
         );
 
-        // Also check if session already exists
+    
         supabase.auth.getSession().then(({ data }) => {
             if (data.session) {
                 handleUser(data.session);

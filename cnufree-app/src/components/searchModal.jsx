@@ -89,7 +89,6 @@ function SearchProfileModal({ open, close }) {
 
   if (!open) return null;
 
-  console.log(results);
   return (
     <div
       className="
@@ -164,20 +163,22 @@ function SearchProfileModal({ open, close }) {
               results.map((user) => (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between rounded-lg border p-4"
+                  className="flex items-center justify-between gap-3 rounded-lg border p-4"
                 >
-                  <div>
-                    <h3 className="font-bold">
+                  <div className="min-w-0 max-w-[220px]">
+                    <h3 className="font-bold truncate">
                       {user.firstname} {user.lastname}
                     </h3>
 
-                    <p className="text-sm text-slate-500">@{user.username}</p>
+                    <p className="text-sm text-slate-500 truncate">
+                      @{user.username}
+                    </p>
                   </div>
 
                   {user.friendshipStatus === "accepted" ? (
                     <button
                       disabled
-                      className="rounded-lg px-4 py-2 font-bold bg-slate-300 text-slate-600 cursor-not-allowed"
+                      className="shrink-0 rounded-lg px-4 py-2 font-bold bg-slate-300 text-slate-600 cursor-not-allowed"
                     >
                       Friends
                     </button>
@@ -188,6 +189,7 @@ function SearchProfileModal({ open, close }) {
                         handleCancelRequest(user.requestId, user.id)
                       }
                       className="
+                            shrink-0
                             rounded-lg
                             px-4
                             py-2
@@ -208,6 +210,7 @@ function SearchProfileModal({ open, close }) {
                       disabled={processingUserId === user.id}
                       onClick={() => handleAddFriend(user.id)}
                       className="
+                            shrink-0
                             rounded-lg
                             px-4
                             py-2

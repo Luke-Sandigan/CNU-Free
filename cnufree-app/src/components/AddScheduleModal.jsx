@@ -241,7 +241,7 @@ function AddScheduleModal({
                     className=" w-32 flex items-center gap-1 rounded border px-2 py-1 text-xs"
                   >
                     <input
-                      type="checkbox"
+                      type="checkbox" 
                       checked={selectedDays.includes(day)}
                       onChange={() => handleDayChange(day)}
                     />
@@ -256,7 +256,7 @@ function AddScheduleModal({
           <div className="flex flex-col gap-2 text:md">
             <label className="font-extrabold"> 📚 Subject Code </label>
             <input
-              ref={subjectRef}
+              ref={subjectRef} maxLength={20}
               className="rounded-lg border p-2"
               placeholder="e.g., SOCS104"
               value={subject}
@@ -293,7 +293,7 @@ function AddScheduleModal({
           <div className="flex flex-col gap-2 mb-4">
             <label className="font-extrabold"> 🏣 Room Number</label>
             <input
-              ref={roomRef}
+              ref={roomRef} maxLength={20}
               className="rounded-lg border p-2 text-md"
               placeholder="e.g., AL212/LAB-2"
               value={room}

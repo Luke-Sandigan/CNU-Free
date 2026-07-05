@@ -75,27 +75,42 @@ function FriendScheduleModal({ open, close, friendId }) {
                     <>
                         <div className="mx-5 mt-5 rounded-2xl border bg-slate-50 p-5">
                             <div className="flex gap-4 items-center">
-                                <div className="w-16 h-16 rounded-full bg-[#111827] text-white flex justify-center items-center text-2xl font-black">
+                                <div className="w-16 h-16 rounded-full bg-[#111827] text-white flex justify-center items-center text-2xl font-black shrink-0">
                                     {friend.firstname?.charAt(0).toUpperCase()}
                                 </div>
-                                <div className="flex-1">
-                                    <h2 className="font-black text-xl"> {friend.firstname} {friend.lastname}</h2>
-                                    <p className="text-slate-500"> @{friend.username}</p>
+                                <div className="flex-1 min-w-0">
+                                    <h2
+                                        className="font-black text-xl truncate"
+                                        title={`${friend.firstname} ${friend.lastname}`}
+                                    > {friend.firstname} {friend.lastname}</h2>
+                                    <p
+                                        className="text-slate-500 truncate"
+                                        title={`@${friend.username}`}
+                                    > @{friend.username}</p>
                                 </div>
                             </div>
 
                             <div className="flex flex-wrap gap-2 mt-5">
-                                <div className="border rounded-full px-3 py-1 flex items-center gap-2 text-sm">
-                                    <GraduationCap size={15} />
-                                    {friend.program}
+                                <div
+                                    className="max-w-full border rounded-full px-3 py-1 flex items-center gap-2 text-sm"
+                                    title={friend.program}
+                                >
+                                    <GraduationCap size={15} className="shrink-0" />
+                                    <span className="truncate">{friend.program}</span>
                                 </div>
-                                <div className="border rounded-full px-3 py-1 flex items-center gap-2 text-sm">
-                                    <CalendarDays size={15} />
-                                    Year {friend.year}
+                                <div
+                                    className="max-w-full border rounded-full px-3 py-1 flex items-center gap-2 text-sm"
+                                    title={`Year ${friend.year}`}
+                                >
+                                    <CalendarDays size={15} className="shrink-0" />
+                                    <span className="truncate">Year {friend.year}</span>
                                 </div>
-                                <div className="border rounded-full px-3 py-1 flex items-center gap-2 text-sm">
-                                    <School size={15} />
-                                    {friend.school_name}
+                                <div
+                                    className="max-w-full border rounded-full px-3 py-1 flex items-center gap-2 text-sm"
+                                    title={friend.school_name}
+                                >
+                                    <School size={15} className="shrink-0" />
+                                    <span className="truncate">{friend.school_name}</span>
                                 </div>
                             </div>
                         </div>
@@ -133,12 +148,18 @@ function FriendScheduleModal({ open, close, friendId }) {
                                     {todaySchedules.map((schedule) => (
                                         <div key={schedule.schedule_id} className={`rounded-2xl border-l-8 shadow-sm border p-5 transition-all hover:shadow-lg ${COLOR_STYLES[schedule.color] || "border-slate-500 bg-slate-50"}`}>
                                             <div className="flex justify-between items-start gap-3">
-                                                <div>
-                                                    <h3 className="text-xl font-black text-[#111827]">{schedule.subject}</h3>
+                                                <div className="min-w-0 flex-1">
+                                                    <h3
+                                                        className="text-xl font-black text-[#111827] truncate"
+                                                        title={schedule.subject}
+                                                    >{schedule.subject}</h3>
                                                     <p className="text-sm text-slate-500 mt-1">Room</p>
-                                                    <h4 className="font-bold text-slate-700">{schedule.room}</h4>
+                                                    <h4
+                                                        className="font-bold text-slate-700 truncate"
+                                                        title={schedule.room}
+                                                    >{schedule.room}</h4>
                                                 </div>
-                                                <div className="bg-white border rounded-xl px-4 py-3 text-center shadow-sm">
+                                                <div className="bg-white border rounded-xl px-4 py-3 text-center shadow-sm shrink-0">
                                                     <p className="text-xs text-slate-500 font-semibold">TIME</p>
                                                     <p className="font-black text-[#111827] mt-1">{formatTime(schedule.start_time)}</p>
                                                     <p className="text-xs text-slate-400 my-1">to</p>

@@ -119,12 +119,18 @@ function SideBar ({open, close}) {
 
       <div className="mt-auto flex p-2 gap-2 flex items-center justify-center h-20 border border-x-0 border-y-slate-200">
         <div className="w-9 h-9 bg-[#111827] rounded-full flex items-center justify-center shrink-0">
-          <p className="text-white font-extrabold text-sm"> {profile?.firstname.charAt(0).toUpperCase()} </p>
+          <p className="text-white font-extrabold text-sm"> {profile?.firstname?.charAt(0).toUpperCase()} </p>
         </div>
 
-          <div className="flex flex-col ">
-              <h3 className="font-extrabold"> {profile?.firstname} {profile?.lastname} </h3>
-              <p className="text-[13px]"> {profile?.program} - {profile?.year} </p>
+          <div className="w-full min-w-0 flex flex-col ">
+              <h3
+                className="font-extrabold truncate"
+                title={`${profile?.firstname ?? ""} ${profile?.lastname ?? ""}`}
+              > {profile?.firstname} {profile?.lastname} </h3>
+              <p
+                className="text-[13px] truncate"
+                title={`${profile?.program ?? ""} - ${profile?.year ?? ""}`}
+              > {profile?.program} - {profile?.year} </p>
           </div>
       </div>
 </aside>

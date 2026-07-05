@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { SquarePen } from "lucide-react";
+// import { SquarePen } from "lucide-react";
 import { CalendarDays } from "lucide-react";
 import { CalendarOff } from "lucide-react";
 
@@ -129,7 +129,7 @@ function WeeklyScheduleCard({
                                 {formatTime(item.endTime)}
                               </p>
                             </div>
-                            <p className="text-[12px] sm:text-sm font-bold">
+                            <p className="text-[12px] sm:text-sm truncate font-bold">
                               ROOM: {item.room}
                             </p>
 
