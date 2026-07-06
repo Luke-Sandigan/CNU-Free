@@ -85,6 +85,7 @@ function Onboarding() {
         type: "success",
         message: "You are all set. You can create your schedule now!",
       });
+      // window.location.replace("/Home");   
     } catch (error) {
       console.error(error);
       showToast({

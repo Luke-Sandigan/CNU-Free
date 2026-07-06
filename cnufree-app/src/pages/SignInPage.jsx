@@ -105,11 +105,11 @@ function SignInPage() {
       </h1>
       <p className=" text-md sm:text-[18px] mt-2 mb-1">
         {" "}
-        Create an account or sign in{" "}
+        Create your account with just one click using Google{" "}
       </p>
       <p className=" text-[12px] sm:text-[12px] text-gray-500 mb-6 leading-relaxed">
         {" "}
-        By clicking any of the “Continue” options below, you agree to CNU Free{" "}
+        By clicking any of the “Continue” option below, you agree to CNU Free{" "}
         <a> Terms of Service </a>
         and acknowledge our <a> Privacy Policy </a>and <a> Cookie Policy </a>
         .{" "}

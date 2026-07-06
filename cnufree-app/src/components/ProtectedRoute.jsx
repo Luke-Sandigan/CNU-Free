@@ -7,19 +7,24 @@ function ProtectedRoute({ children }) {
   const location = useLocation();
 
   const [loading, setLoading] = useState(true);
-
   const [session, setSession] = useState(null);
-
   const [onboardingComplete, setOnboardingComplete] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+
     async function checkUser() {
+      setLoading(true);
+
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
+      if (!mounted) return;
+
       if (!session) {
         setSession(null);
+        setOnboardingComplete(false);
         setLoading(false);
         return;
       }
@@ -32,17 +37,31 @@ function ProtectedRoute({ children }) {
         .eq("id", session.user.id)
         .single();
 
+      if (!mounted) return;
+
       if (error) {
         console.error(error);
+        setOnboardingComplete(false);
+      } else {
+        setOnboardingComplete(data?.onboarding_complete ?? false);
       }
-
-      setOnboardingComplete(data?.onboarding_complete ?? false);
 
       setLoading(false);
     }
 
     checkUser();
-  }, []);
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      checkUser();
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [location.pathname]);
 
   if (loading) {
     return <LoadingModal open={true} />;
