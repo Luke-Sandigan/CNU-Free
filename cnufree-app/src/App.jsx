@@ -43,7 +43,7 @@ const router = createBrowserRouter([
       //   ),
       // },
       {
-        path: "/Auth/callback",
+        path: "/auth/callback",
         element: <AuthCallback />,
       },
       {
