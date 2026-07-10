@@ -54,6 +54,11 @@ function AddScheduleModal({
   }, [editingSchedule]);
 
   function handleDayChange(day) {
+    if (editingSchedule) {
+      setSelectedDays([day]);
+      return;
+    }
+
     setSelectedDays((previousDays) => {
       if (previousDays.includes(day)) {
         return previousDays.filter((selectedDay) => selectedDay !== day);
@@ -224,7 +229,9 @@ function AddScheduleModal({
           <h2 className=" text-lg font-extrabold">
             {editingSchedule ? "Edit Schedule" : "Add Schedule"}
           </h2>
-          <img className="block w-7 h-7" src={logo} alt="CNU-logo" />
+          <button onClick={onClose}>
+            <img className="block w-7 h-7" src={logo} alt="CNU-logo" />
+          </button>
         </div>
 
         <div className="flex flex-col gap-3 w-full">
@@ -238,15 +245,35 @@ function AddScheduleModal({
                 {DAYS.map((day) => (
                   <label
                     key={day}
-                    className=" w-32 flex items-center gap-1 rounded border px-2 py-1 text-xs"
+                    className=" w-32 flex items-center gap-1 bg-[#111824] rounded border px-2 py-1 text-xs"
                   >
-                    <input
-                      type="checkbox" 
-                      checked={selectedDays.includes(day)}
-                      onChange={() => handleDayChange(day)}
-                    />
+                    <label
+                      key={day}
+                      className={`
+                          w-32 flex bg-white items-center gap-1 rounded border px-2 py-1 text-xs
+                          ${
+                            editingSchedule && day !== editingSchedule.day
+                              ? "opacity-50 cursor-not-allowed bg-gray-100"
+                              : "cursor-pointer"
+                          }
+                        `}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedDays.includes(day)}
+                        disabled={
+                          editingSchedule && day !== editingSchedule.day
+                        }
+                        onChange={() => handleDayChange(day)}
+                      />
 
-                    {day}
+                      {day}
+                    </label>
+
+                    <span className=" p-2 text-white font-extrabold text-[13px]">
+                      {" "}
+                      {day?.charAt(0).toUpperCase()}
+                    </span>
                   </label>
                 ))}
               </div>
@@ -256,7 +283,8 @@ function AddScheduleModal({
           <div className="flex flex-col gap-2 text:md">
             <label className="font-extrabold"> 📚 Subject Code </label>
             <input
-              ref={subjectRef} maxLength={20}
+              ref={subjectRef}
+              maxLength={20}
               className="rounded-lg border p-2"
               placeholder="e.g., SOCS104"
               value={subject}
@@ -293,7 +321,8 @@ function AddScheduleModal({
           <div className="flex flex-col gap-2 mb-4">
             <label className="font-extrabold"> 🏣 Room Number</label>
             <input
-              ref={roomRef} maxLength={20}
+              ref={roomRef}
+              maxLength={20}
               className="rounded-lg border p-2 text-md"
               placeholder="e.g., AL212/LAB-2"
               value={room}
@@ -309,7 +338,7 @@ function AddScheduleModal({
                 type="button"
                 onClick={() => setColor("violet")}
                 className={`
-                w-8 h-8 rounded-full bg-violet-500
+                w-8 h-8 rounded bg-violet-500
                 ${color === "violet" ? "ring-4 ring-violet-300" : ""}
               `}
               />
@@ -318,7 +347,7 @@ function AddScheduleModal({
                 type="button"
                 onClick={() => setColor("orange")}
                 className={`
-                  w-8 h-8 rounded-full bg-orange-500
+                  w-8 h-8 rounded bg-orange-500
                   ${color === "orange" ? "ring-4 ring-orange-300" : ""}
                 `}
               />
@@ -327,7 +356,7 @@ function AddScheduleModal({
                 type="button"
                 onClick={() => setColor("emerald")}
                 className={`
-                  w-8 h-8 rounded-full bg-emerald-500
+                  w-8 h-8 rounded bg-emerald-500
                   ${color === "emerald" ? "ring-4 ring-emerald-300" : ""}
                 `}
               />
@@ -336,7 +365,7 @@ function AddScheduleModal({
                 type="button"
                 onClick={() => setColor("blue")}
                 className={`
-                  w-8 h-8 rounded-full bg-blue-500
+                  w-8 h-8 rounded bg-blue-500
                   ${color === "blue" ? "ring-4 ring-blue-300" : ""}
                 `}
               />
@@ -345,7 +374,7 @@ function AddScheduleModal({
                 type="button"
                 onClick={() => setColor("pink")}
                 className={`
-                  w-8 h-8 rounded-full bg-pink-500
+                  w-8 h-8 rounded bg-pink-500
                   ${color === "pink" ? "ring-4 ring-pink-300" : ""}
                 `}
               />

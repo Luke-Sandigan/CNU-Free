@@ -69,7 +69,7 @@ function SharedTracker() {
         <div className="flex justify-between items-center px-5 py-5 bg-[#111827] shrink-0">
           <div className="flex flex-col">
             <h1 className="font-extrabold text-xl sm:text-4xl text-white">
-              Friend's Tracker
+              Friends Tracker
             </h1>
             <p className="text-md text-slate-400">
               Find out which friend is free!
@@ -121,78 +121,69 @@ function SharedTracker() {
                 return (
                   <div
                     key={friend.friend.id}
-                    className="flex items-center justify-between"
+                    className="grid grid-cols-[minmax(0,1fr)_190px_auto] sm:grid-cols-[minmax(0,1fr)_250px_auto] items-center gap-3"
                   >
-                    <div className="flex gap-4 items-center">
+                
+                    <div className="flex items-center gap-4 min-w-0">
                       <div
-                        className={`rounded-full size-2
-                                    ${
-                                      status.status === "Busy"
-                                        ? "bg-red-500"
-                                        : "bg-green-500"
-                                    }
-                                `}
+                        className={`rounded-full size-2 shrink-0 ${
+                          status.status === "Busy"
+                            ? "bg-red-500"
+                            : "bg-green-500"
+                        }`}
                       />
 
-                      <div className=" flex flex-col max-w-[90px] sm:max-w-[120px] min-w-0">
+                      <div className="flex flex-col min-w-0">
                         <h1 className="font-extrabold truncate">
-                          {friend.friend.firstname}
+                          {friend.friend.firstname} 
                         </h1>
 
-                        <p className=" text-xs text-slate-500 ">
-                          @{friend.friend.username}
+                        <p className="text-xs text-slate-500 truncate">
+                          @{friend.friend.username} 
                         </p>
                       </div>
                     </div>
 
-                    <div
-                      className={` shrink-0 border rounded-lg px-3 py-2
-                                ${
-                                  status.status === "Busy"
-                                    ? "bg-red-100 border-red-400"
-                                    : "bg-green-100 border-green-400"
-                                }
-                            `}
-                    >
-                      <div className="flex gap-2 items-center">
+        
+                    <div className="justify-self-start">
+                      <div
+                        className={`inline-flex items-center gap-2 border rounded-lg px-3 py-2 whitespace-nowrap ${
+                          status.status === "Busy"
+                            ? "bg-red-100 border-red-400"
+                            : "bg-green-100 border-green-400"
+                        }`}
+                      >
                         <div
-                          className={`
-                                        rounded-full
-                                        size-2
-                                        ${
-                                          status.status === "Busy"
-                                            ? "bg-red-500"
-                                            : "bg-green-500"
-                                        }
-                                    `}
+                          className={`rounded-full size-2 ${
+                            status.status === "Busy"
+                              ? "bg-red-500"
+                              : "bg-green-500"
+                          }`}
                         />
 
                         <span
-                          className={`
-                                        text-xs
-                                        font-bold
-                                        ${
-                                          status.status === "Busy"
-                                            ? "text-red-600"
-                                            : "text-green-600"
-                                        }
-                                    `}
+                          className={`text-xs font-bold ${
+                            status.status === "Busy"
+                              ? "text-red-600"
+                              : "text-green-600"
+                          }`}
                         >
                           {status.status === "Busy"
                             ? `Busy until ${formatTime(status.end)}`
                             : status.nextSubject
                               ? `Free until ${formatTime(status.start)}`
-                              : "Free all day"}
+                              : "Free all day"} 
                         </span>
                       </div>
                     </div>
 
+                    {/* Eye */}
                     <button
                       onClick={() => {
                         setSelectedFriendId(friend.friend.id);
                         setScheduleOpen(true);
                       }}
-                      className="p-2 bg-[#111827] text-white rounded shrink-0 "
+                      className="p-2 bg-[#111827] text-white rounded shrink-0"
                     >
                       <Eye size={18} />
                     </button>

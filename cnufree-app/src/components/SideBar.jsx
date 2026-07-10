@@ -100,7 +100,7 @@ function SideBar ({open, close}) {
               <Boxes size={23} />
               <a href="#" className=" hover:bg-gray-100">
 
-                Friend's Tracker
+                Friends Tracker
               </a>
             </div>
 

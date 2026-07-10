@@ -24,6 +24,7 @@ function HomeNavBar({ isOpen, setIsOpen }) {
   const searchRef = useRef(null);
 
   const [hasNotification, setHasNotification] = useState(false);
+  const [loadingSearch, setLoadingSearch] = useState(false);
 
   async function handleLogout() {
     const { error } = await supabase.auth.signOut();
@@ -84,14 +85,20 @@ function HomeNavBar({ isOpen, setIsOpen }) {
     const timeout = setTimeout(async () => {
       if (!search.trim()) {
         setResults([]);
+        setLoadingSearch(false);
         return;
       }
 
       try {
+        setLoadingSearch(true);
+
         const data = await searchFriends(search);
+
         setResults(data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoadingSearch(false);
       }
     }, 300);
 
@@ -139,7 +146,7 @@ function HomeNavBar({ isOpen, setIsOpen }) {
       if (!user) return;
 
       channel = supabase
-        .channel("friend-request-listener")
+        .channel(`friend-request-listener-${user.id}`)
 
         .on(
           "postgres_changes",
@@ -229,7 +236,39 @@ function HomeNavBar({ isOpen, setIsOpen }) {
 
             {search.trim() !== "" && (
               <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
-                {results.length > 0 ? (
+                {loadingSearch ? (
+                  <>
+                    {[...Array(4)].map((_, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between gap-2 px-3 sm:px-4 py-3 animate-pulse"
+                      >
+                        {/* Left Section */}
+                        <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1 ">
+                          <div className="w-2 h-2 rounded-full bg-slate-300 shrink-0"></div>
+
+                          <div className="min-w-0 flex-1">
+                            <div className="h-4 w-24 sm:w-36 rounded bg-slate-300 mb-2"></div>
+                            <div className="h-3 w-16 sm:w-24 rounded bg-slate-200"></div>
+                          </div>
+                        </div>
+
+                       
+                        <div className="rounded-lg border border-slate-200 p-2 sm:p-3 shrink-0 hidden sm:block">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+
+                    
+                            <div className="hidden sm:block h-3 w-24 rounded bg-slate-300"></div>
+                          </div>
+                        </div>
+
+                        
+                        <div className="w-9 h-9 rounded-lg bg-slate-300 shrink-0"></div>
+                      </div>
+                    ))}
+                  </>
+                ) : results.length > 0 ? (
                   results.map((user) => (
                     <SearchResultCard key={user.id} user={user} />
                   ))

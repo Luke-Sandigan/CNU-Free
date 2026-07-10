@@ -418,31 +418,27 @@ export async function searchFriends(searchText) {
 
   if (!searchText.trim()) return [];
 
-  const { data: users, error } = await supabase
-    .from("profiles")
+  const { data, error } = await supabase
+    .from("friendships")
     .select(`
-      id,
-      firstname,
-      lastname,
-      username,
-      schedules(
-        schedule_id,
-        subject,
-        day,
-        start_time,
-        end_time,
-        is_archived
+      friend:profiles!friendships_friend_id_fkey(
+        id,
+        firstname,
+        lastname,
+        username,
+        schedules(
+          schedule_id,
+          subject,
+          day,
+          start_time,
+          end_time,
+          is_archived
+        )
       )
     `)
-    .or(
-      `firstname.ilike.%${searchText}%,lastname.ilike.%${searchText}%,username.ilike.%${searchText}%`
-    )
-    .neq("id", user.id);
+    .eq("user_id", user.id);
 
-  if (error) {
-    console.error("searchFriends error:", error);
-    throw error;
-  }
+  if (error) throw error;
 
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -450,38 +446,48 @@ export async function searchFriends(searchText) {
 
   const now = new Date();
 
-  return users.map((person) => {
-    const todaysSchedule =
-      person.schedules?.filter(
-        (schedule) =>
-          schedule.day === today &&
-          !schedule.is_archived
-      ) || [];
+  return data
+    .map(({ friend }) => friend)
+    .filter((friend) => {
+      const search = searchText.toLowerCase();
 
-    let status = "Free";
+      return (
+        friend.firstname.toLowerCase().includes(search) ||
+        friend.lastname.toLowerCase().includes(search) ||
+        friend.username.toLowerCase().includes(search)
+      );
+    })
+    .map((friend) => {
+      const todaysSchedule =
+        friend.schedules?.filter(
+          (schedule) =>
+            schedule.day === today &&
+            !schedule.is_archived
+        ) || [];
 
-    for (const schedule of todaysSchedule) {
-      const start = new Date();
-      const end = new Date();
+      let status = "Free";
 
-      const [sh, sm] = schedule.start_time.split(":");
-      const [eh, em] = schedule.end_time.split(":");
+      for (const schedule of todaysSchedule) {
+        const start = new Date();
+        const end = new Date();
 
-      start.setHours(Number(sh), Number(sm), 0, 0);
-      end.setHours(Number(eh), Number(em), 0, 0);
+        const [sh, sm] = schedule.start_time.split(":");
+        const [eh, em] = schedule.end_time.split(":");
 
-      if (now >= start && now <= end) {
-        status = "Busy";
-        break;
+        start.setHours(Number(sh), Number(sm), 0, 0);
+        end.setHours(Number(eh), Number(em), 0, 0);
+
+        if (now >= start && now <= end) {
+          status = "Busy";
+          break;
+        }
       }
-    }
 
-    return {
-      ...person,
-      schedules: person.schedules?.filter(
-        (schedule) => !schedule.is_archived
-      ) || [],
-      status,
-    };
-  });
+      return {
+        ...friend,
+        schedules:
+          friend.schedules?.filter((s) => !s.is_archived) ?? [],
+        status,
+      };
+    });
 }

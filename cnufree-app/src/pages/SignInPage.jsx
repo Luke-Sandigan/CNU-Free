@@ -5,68 +5,68 @@ import GoogleIcon from "../components/GoogleIcon";
 // import AppleIcon from "../components/AppleIcon";
 import BackButton from "../components/BackComponent";
 // import { supabase } from "../utils/supabase";
-import {  signInWithGoogle } from "../services/authService";
+import { signInWithGoogle } from "../services/authService";
 import { useToast } from "../context/ToastContext";
 // import { motion } from "framer-motion";
 
 function SignInPage() {
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
 
   const { showToast } = useToast();
 
   const [googleLoading, setGoogleLoading] = useState(false);
 
-//   const [email, setEmail] = useState("");
-//   const [loading, setLoading] = useState(false);
+  //   const [email, setEmail] = useState("");
+  //   const [loading, setLoading] = useState(false);
 
-//   async function handleContinue() {
-//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   async function handleContinue() {
+  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-//     if (!email.trim()) {
-//       showToast({
-//         type: "error",
-//         message: "Please enter your email.",
-//       });
-//       return;
-//     }
+  //     if (!email.trim()) {
+  //       showToast({
+  //         type: "error",
+  //         message: "Please enter your email.",
+  //       });
+  //       return;
+  //     }
 
-//     if (!emailRegex.test(email)) {
-//       showToast({
-//         type: "error",
-//         message: "Please enter a valid email address.",
-//       });
-//       return;
-//     }
+  //     if (!emailRegex.test(email)) {
+  //       showToast({
+  //         type: "error",
+  //         message: "Please enter a valid email address.",
+  //       });
+  //       return;
+  //     }
 
-//     try {
-//       setLoading(true);
+  //     try {
+  //       setLoading(true);
 
-//       await sendOtp(email);
-//       sessionStorage.setItem("otp_email", email);
-//       showToast({
-//         type: "success",
-//         message: "Verification code sent successfully.",
-//       });
+  //       await sendOtp(email);
+  //       sessionStorage.setItem("otp_email", email);
+  //       showToast({
+  //         type: "success",
+  //         message: "Verification code sent successfully.",
+  //       });
 
-//       navigate("/VerificationPage", {
-//         state: { email },
-//       });
-//     } catch (error) {
-//       let message = error.message;
+  //       navigate("/VerificationPage", {
+  //         state: { email },
+  //       });
+  //     } catch (error) {
+  //       let message = error.message;
 
-//       if (message.toLowerCase().includes("rate limit")) {
-//         message =
-//           "You've requested too many verification codes. Please wait a minute before trying again.";
-//       }
+  //       if (message.toLowerCase().includes("rate limit")) {
+  //         message =
+  //           "You've requested too many verification codes. Please wait a minute before trying again.";
+  //       }
 
-//       showToast({
-//         type: "error",
-//         message,
-//       });
-//     } finally {
-//       setLoading(false);
-//     }
-//   }
+  //       showToast({
+  //         type: "error",
+  //         message,
+  //       });
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
 
   async function handleGoogleLogin() {
     try {
@@ -105,13 +105,40 @@ function SignInPage() {
       </h1>
       <p className=" text-md sm:text-[18px] mt-2 mb-1">
         {" "}
-        Create your account with just one click using Google{" "}
+        Create your account with just one click using Google
       </p>
       <p className=" text-[12px] sm:text-[12px] text-gray-500 mb-6 leading-relaxed">
         {" "}
         By clicking any of the “Continue” option below, you agree to CNU Free{" "}
-        <a> Terms of Service </a>
-        and acknowledge our <a> Privacy Policy </a>and <a> Cookie Policy </a>
+        <a
+          href="https://youtu.be/QDia3e12czc?si=_0tn7QIXfAG_3RQT"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 underline"
+        >
+          {" "}
+          Terms of Service{" "}
+        </a>
+        and acknowledge our{" "}
+        <a
+          href="https://youtu.be/QDia3e12czc?si=_0tn7QIXfAG_3RQT"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 underline"
+        >
+          {" "}
+          Privacy Policy{" "}
+        </a>
+        and{" "}
+        <a
+          href="https://youtu.be/QDia3e12czc?si=_0tn7QIXfAG_3RQT"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 underline"
+        >
+          {" "}
+          Cookie Policy{" "}
+        </a>
         .{" "}
       </p>
 

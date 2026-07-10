@@ -23,11 +23,20 @@ function HomePage() {
   const [editingSchedule, setEditingSchedule] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [showActions, setShowActions] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  async function loadSchedules() {
+async function loadSchedules() {
+  try {
+    setIsLoading(true);
+
     const data = await getSchedules();
     setSchedule(data);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setIsLoading(false);
   }
+}
 
   async function handleAddSchedule(newSchedules) {
     try {
@@ -166,6 +175,7 @@ function HomePage() {
           <WeeklyScheduleCard
             schedule={schedule}
             showActions={showActions}
+            isLoading={isLoading}
             toggleActions={() => setShowActions(!showActions)}
             // onDeleteClick={handleDeleteSchedule}
 

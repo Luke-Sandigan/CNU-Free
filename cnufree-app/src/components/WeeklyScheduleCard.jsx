@@ -15,6 +15,7 @@ const COLOR_STYLES = {
 
 function WeeklyScheduleCard({
   schedule,
+  isLoading,
   onAddClick,
   onEditClick,
   onDeleteClick,
@@ -68,7 +69,50 @@ function WeeklyScheduleCard({
           </button>
         </div>
       </div>
-      {schedule.length === 0 ? (
+      {isLoading ? (
+        <div className="overflow-x-auto animate-pulse">
+          <table className="min-w-[1400px] w-full table-fixed border-collapse">
+            <thead>
+              <tr>
+                {DAYS.map((day) => (
+                  <th
+                    key={day}
+                    className="border border-slate-200 bg-slate-100 px-1 py-2"
+                  >
+                    <div className="mx-auto h-4 w-10 rounded bg-slate-300"></div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                {DAYS.map((day) => (
+                  <td
+                    key={day}
+                    className="border border-slate-200 p-2 align-top"
+                  >
+                    <div className="space-y-3">
+                      {[1, 2].map((i) => (
+                        <div
+                          key={i}
+                          className="rounded-lg border border-slate-200 bg-slate-100 p-3"
+                        >
+                          <div className="mb-3 h-5 w-3/4 rounded bg-slate-300"></div>
+
+                          <div className="mb-3 h-12 rounded bg-slate-200"></div>
+
+                          <div className="h-4 w-1/2 rounded bg-slate-300"></div>
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      ) : schedule.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-6xl">
             {" "}
@@ -123,9 +167,13 @@ function WeeklyScheduleCard({
                               className="flex flex-col bg-white border border-black text-[#111824] items-center justify-center
                                rounded-xl gap-1 mb-2 p-2 mt-2"
                             >
-                              <h1 className="text-slate-400 font-bold text-sm"> TIME </h1>
+                              <h1 className="text-slate-400 font-bold text-sm">
+                                {" "}
+                                TIME{" "}
+                              </h1>
                               <p className=" text-[12px] sm:text-sm font-bold ">
-                                {formatTime(item.startTime)}{" - "} 
+                                {formatTime(item.startTime)}
+                                {" - "}
                                 {formatTime(item.endTime)}
                               </p>
                             </div>
@@ -134,7 +182,7 @@ function WeeklyScheduleCard({
                             </p>
 
                             {showActions && (
-                              <div className="flex gap-1">
+                              <div className="flex gap-1 mt-2 justify-between">
                                 <button
                                   onClick={() => {
                                     onEditClick(item);
@@ -142,11 +190,11 @@ function WeeklyScheduleCard({
                                   className="
                                     rounded
                                     bg-[#111824]
-                                    px-2
-                                    py-1
-                                    text-xs
+                                    px-3
+                                    py-2
+                                    text-sm
                                     font-bold
-                                    text-white
+                                    text-white hover:bg-slate-500 transition-all duration-300 ease-linear
                                   "
                                 >
                                   Edit
@@ -157,8 +205,8 @@ function WeeklyScheduleCard({
                                   className="
                                     rounded
                                     bg-red-500
-                                    px-2
-                                    py-1
+                                    px-4
+                                    py-2
                                     text-xs
                                     font-bold
                                     text-white
